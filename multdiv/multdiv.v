@@ -35,13 +35,13 @@ module multdiv(
     dffe_ref multLatch(.q(isMult), .d(ctrl_MULT), .clk(clock), .en(op_start));
 
     // Multiplicand
-    reg32 M_reg(.data(data_operandA), .clk(clock), .write_enable(op_start), .out(multiplicand));
+    reg32 multiplicand_reg(.data(data_operandB), .clk(clock), .write_enable(ctrl_MULT), .out(multiplicand));
 
     assign i_multiplicand = shift_multiplicand ? multiplicand << 1 : multiplicand;
 
 
     // Product Reg
-    assign product_data = ctrl_MULT ? {{30{1'b0}}, data_operandB, 3'b000} : {product_head, shifted_product[32:0]};
+    assign product_data = ctrl_MULT ? {{30{1'b0}}, data_operandA, 3'b000} : {product_head, shifted_product[32:0]};
     assign shifted_product = {{2{product_out[64]}}, product_out[64:2]};
     reg65 product(.data(product_data), .write_enable(product_write), .clk(clock), .out(product_out));
 
@@ -58,11 +58,6 @@ module multdiv(
 
     cla32bit CLA32(
     .Cout(Cout), .sum(sum_result), .a(cla_inputA), .b(cla_inputB), .Cin(isSub));
-
-    // xnor(operand_sign_match, data_operandA[31], cla_inputB[31]);
-    // xor(result_sign_differs, sum_result[31], data_operandA[31]);
-
-    // and(overflow, operand_sign_match, result_sign_differs);
 
     assign cla_overflow_return = (~(cla_inputA[31] ^ cla_inputB[31]) && (sum_result[31] ^ cla_inputA[31])) && doAdd;
 
