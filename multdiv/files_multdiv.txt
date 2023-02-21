@@ -1,0 +1,7 @@
+multdiv.v
+multdiv_tb.v
+reg32.v
+reg65.v
+-y .\cla
+-y .\t_flip-flop
+-y .\counter

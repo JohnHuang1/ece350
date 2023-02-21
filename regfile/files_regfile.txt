@@ -1,0 +1,5 @@
+decoder32.v
+dffe_ref.v
+reg32.v
+regfile.v
+regfile_tb.v

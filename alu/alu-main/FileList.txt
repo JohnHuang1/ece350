@@ -1,0 +1,6 @@
+alu.v
+alu_tb.v
+not_32.v
+-y .\shifter
+-y .\mux
+-y .\cla
