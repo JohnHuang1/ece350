@@ -23,12 +23,19 @@ module multdiv(
     wire Cout;
     wire product_write;
     wire cla_overflow_return;
+    wire isDiv, isMult;
     wire [4:0] count;
 
     wire shift_multiplicand;
 
+    // Latch mult/div signal
+    wire op_start = ctrl_MULT || ctrl_DIV;
+
+    dffe_ref divLatch(.q(isDiv), .d(ctrl_DIV), .clk(clock), .en(op_start));
+    dffe_ref multLatch(.q(isMult), .d(ctrl_MULT), .clk(clock), .en(op_start));
+
     // Multiplicand
-    reg32 multiplicand_reg(.data(data_operandA), .clk(clock), .write_enable(ctrl_MULT), .out(multiplicand));
+    reg32 M_reg(.data(data_operandA), .clk(clock), .write_enable(op_start), .out(multiplicand));
 
     assign i_multiplicand = shift_multiplicand ? multiplicand << 1 : multiplicand;
 
