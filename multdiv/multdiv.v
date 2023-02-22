@@ -13,20 +13,21 @@ module multdiv(
     // add your code here
 
     wire [31:0] sum_result, cla_inputA;
-    wire [31:0] multiplicand, i_multiplicand;
-    wire [64:0] product_out, shifted_product;
+    wire [31:0] M, i_M;
+    wire [64:0] A_out, shifted_A;
     wire [31:0] cla_inputB;
-    wire [64:0] product_data;
-    wire [31:0] product_head;
+    wire [64:0] A_data;
+    wire [31:0] A_head;
     wire isSub;
     wire doAdd;
     wire Cout;
-    wire product_write;
+    wire A_write;
     wire cla_overflow_return;
     wire isDiv, isMult;
     wire [4:0] count;
+    wire [65:0] new_A;
 
-    wire shift_multiplicand;
+    wire shift_M;
 
     // Latch mult/div signal
     wire op_start = ctrl_MULT || ctrl_DIV;
@@ -34,44 +35,49 @@ module multdiv(
     dffe_ref divLatch(.q(isDiv), .d(ctrl_DIV), .clk(clock), .en(op_start));
     dffe_ref multLatch(.q(isMult), .d(ctrl_MULT), .clk(clock), .en(op_start));
 
-    // Multiplicand
-    reg32 multiplicand_reg(.data(data_operandB), .clk(clock), .write_enable(ctrl_MULT), .out(multiplicand));
+    // M
+    reg32 M_reg(.data(data_operandB), .clk(clock), .write_enable(ctrl_MULT), .out(M));
 
-    assign i_multiplicand = shift_multiplicand ? multiplicand << 1 : multiplicand;
+    assign i_M = isMult && shift_M ? M << 1 : M; // Shift mult only if multplication
 
 
-    // Product Reg
-    assign product_data = ctrl_MULT ? {{30{1'b0}}, data_operandA, 3'b000} : {product_head, shifted_product[32:0]};
-    assign shifted_product = {{2{product_out[64]}}, product_out[64:2]};
-    reg65 product(.data(product_data), .write_enable(product_write), .clk(clock), .out(product_out));
+    // A Reg
+    assign A_data = op_start ? (ctrl_MULT ? {{30{1'b0}}, data_operandA, 3'b000} : {{33{1'b0}}, data_operandA}) : new_A;
+        // If operation starting
+            // If mult: thirty 0's with operand A with 3 0's
+            // If Div: thirty three 0's with operand A
+        // else: A head with shifted A
+        
+    assign shifted_A = isMult ? {{2{A_out[64]}}, A_out[64:2]} : {A_out[63:1], 1'b0}; // ASR 2 if Mult, LSL 1 if Div
+    reg65 A_reg(.data(A_data), .write_enable(A_write), .clk(clock), .out(A_out));
 
-    assign data_result = shifted_product[32:1];
+    assign data_result = shifted_A[32:1];
 
     // Subtract Mux logic
  
-    assign cla_inputB = isSub ? ~i_multiplicand : i_multiplicand;
+    assign cla_inputB = isSub ? ~i_M : i_M;
 
 
     // CLA unit (add, or, and)
 
-    assign cla_inputA = shifted_product[64:33];
+    assign cla_inputA = shifted_A[64:33];
 
     cla32bit CLA32(
     .Cout(Cout), .sum(sum_result), .a(cla_inputA), .b(cla_inputB), .Cin(isSub));
 
     assign cla_overflow_return = (~(cla_inputA[31] ^ cla_inputB[31]) && (sum_result[31] ^ cla_inputA[31])) && doAdd;
 
-    // Product output logic
+    // A output logic
 
-    assign product_head = doAdd ? sum_result : shifted_product[64:33];
+    assign new_A = doAdd ? {sum_result, shifted_A[32:0]} : shifted_A;
 
     // Control logic
-    wire [2:0] product_lsb = shifted_product[2:0];
+    wire [2:0] A_lsb = shifted_A[2:0];
 
-    assign isSub = product_lsb[2];
-    assign doAdd = &{|product_lsb, ~&product_lsb};
-    assign product_write = ~data_resultRDY;
-    assign shift_multiplicand = ~^product_lsb[1:0];
+    assign isSub = A_lsb[2] || isDiv; // Do subtraction if 3rd lsb of A is 1 or dividing
+    assign doAdd = &{|A_lsb, ~&A_lsb};
+    assign A_write = ~data_resultRDY;
+    assign shift_M = ~^A_lsb[1:0];
 
     // Counter
     
@@ -80,7 +86,7 @@ module multdiv(
     assign data_resultRDY = ~ctrl_MULT && (count[4] || cla_overflow_return);
 
     // Overflow
-    wire bad_sign = ^{multiplicand[31], shifted_product[0], data_result[31]} && (|data_operandA && |data_operandB);
-    assign data_exception = (|shifted_product[64:32] && ~&shifted_product[64:32]) || bad_sign || cla_overflow_return;
+    wire bad_sign = ^{M[31], shifted_A[0], data_result[31]} && (|data_operandA && |data_operandB);
+    assign data_exception = (|shifted_A[64:32] && ~&shifted_A[64:32]) || bad_sign || cla_overflow_return;
 
 endmodule
