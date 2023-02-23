@@ -1,4 +1,7 @@
 OperandA,OperandB,Ctrl_Mult,Ctrl_Div,interrupt,result,exception
+-282475249,7,0,1,0,-40353607,0
+7,7,0,1,0,1,0
+-7,-7,0,1,0,1,0
 1,0,0,1,0,0,1
 0,1,0,1,0,0,0
 1,2,0,1,0,0,0

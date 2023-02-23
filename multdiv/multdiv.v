@@ -25,7 +25,7 @@ module multdiv(
     wire cla_overflow_return;
     wire isDiv, isMult;
     wire M_is_zero;
-    wire [4:0] count;
+    wire [5:0] count;
     wire [65:0] new_A;
     wire [31:0] input_A;
     wire operand_A_is_negative;
@@ -59,7 +59,9 @@ module multdiv(
     reg65 A_reg(.data(A_data), .write_enable(A_write), .clk(clock), .out(A_out));
 
     // Negated result if divisor and divdend had mismatching signs
-    negate_32 result_negate(.do_negate(^{M[31], operand_A_is_negative} && isDiv), .operand(shifted_A[32:1]), .result(data_result));
+    wire [31:0] div_result;
+    negate_32 result_negate(.do_negate(^{M[31], operand_A_is_negative}), .operand(A_out[32:1]), .result(div_result));
+    assign data_result = isMult ? shifted_A[32:1] : div_result;
 
     // assign data_result = shifted_A[32:1];
 
@@ -98,7 +100,7 @@ module multdiv(
     
     counter_mod32 counter(.clock(clock), .reset(op_start), .q(count), .enable(~data_resultRDY));
 
-    assign data_resultRDY = ~op_start && ((isMult && count[4]) || cla_overflow_return || (isDiv && (&count || M_is_zero)));
+    assign data_resultRDY = ~op_start && ((isMult && count[4]) || cla_overflow_return || (isDiv && (count[5] || M_is_zero)));
 
     assign M_is_zero = ~|M;
     // Overflow
