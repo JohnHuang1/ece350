@@ -1,0 +1,206 @@
+#! /c/Source/iverilog-install/bin/vvp
+:ivl_version "12.0 (devel)" "(s20150603-1539-g2693dd32b)";
+:ivl_delay_selection "TYPICAL";
+:vpi_time_precision - 10;
+:vpi_module "C:\PROGRA~1\iverilog\lib\ivl\system.vpi";
+:vpi_module "C:\PROGRA~1\iverilog\lib\ivl\vhdl_sys.vpi";
+:vpi_module "C:\PROGRA~1\iverilog\lib\ivl\vhdl_textio.vpi";
+:vpi_module "C:\PROGRA~1\iverilog\lib\ivl\v2005_math.vpi";
+:vpi_module "C:\PROGRA~1\iverilog\lib\ivl\va_math.vpi";
+S_000001e395764b80 .scope module, "left_shift_32_barrel_tb" "left_shift_32_barrel_tb" 2 2;
+ .timescale -9 -10;
+v000001e3957d2280_0 .var/i "b", 31 0;
+v000001e3957d1ec0_0 .net "copyBit", 0 0, L_000001e3957d7010;  1 drivers
+v000001e3957d1f60_0 .var/i "i", 31 0;
+v000001e3957d20a0_0 .net "in", 31 0, v000001e3957d1f60_0;  1 drivers
+v000001e3957d2f00_0 .net "out", 31 0, L_000001e395773d80;  1 drivers
+L_000001e395820088 .functor BUFT 1, C4<10111>, C4<0>, C4<0>, C4<0>;
+v000001e3957d2aa0_0 .net "shiftAmt", 4 0, L_000001e395820088;  1 drivers
+L_000001e3957d7010 .part v000001e3957d2280_0, 0, 1;
+S_000001e395764d10 .scope module, "sl32b" "left_shift_32_barrel" 2 9, 3 1 0, S_000001e395764b80;
+ .timescale 0 0;
+    .port_info 0 /INPUT 32 "in";
+    .port_info 1 /INPUT 5 "shiftAmt";
+    .port_info 2 /INPUT 1 "copyBit";
+    .port_info 3 /OUTPUT 32 "out";
+L_000001e395773d80 .functor BUFZ 32, L_000001e3957d6bb0, C4<00000000000000000000000000000000>, C4<00000000000000000000000000000000>, C4<00000000000000000000000000000000>;
+v000001e3957d2960_0 .net "copyBit", 0 0, L_000001e3957d7010;  alias, 1 drivers
+v000001e3957d2e60_0 .net "in", 31 0, v000001e3957d1f60_0;  alias, 1 drivers
+v000001e3957d2000_0 .net "mux1", 31 0, L_000001e3957d6bb0;  1 drivers
+v000001e3957d2320_0 .net "mux16", 31 0, L_000001e3957d2dc0;  1 drivers
+v000001e3957d2b40_0 .net "mux2", 31 0, L_000001e3957d7a10;  1 drivers
+v000001e3957d3180_0 .net "mux4", 31 0, L_000001e3957d7bf0;  1 drivers
+v000001e3957d2640_0 .net "mux8", 31 0, L_000001e3957d35e0;  1 drivers
+v000001e3957d3b80_0 .net "out", 31 0, L_000001e395773d80;  alias, 1 drivers
+v000001e3957d26e0_0 .net "shift1", 31 0, L_000001e3957d7470;  1 drivers
+v000001e3957d2780_0 .net "shift16", 31 0, L_000001e3957d30e0;  1 drivers
+v000001e3957d2be0_0 .net "shift2", 31 0, L_000001e3957d6d90;  1 drivers
+v000001e3957d2820_0 .net "shift4", 31 0, L_000001e3957d6cf0;  1 drivers
+v000001e3957d1e20_0 .net "shift8", 31 0, L_000001e3957d3540;  1 drivers
+v000001e3957d3720_0 .net "shiftAmt", 4 0, L_000001e395820088;  alias, 1 drivers
+L_000001e3957d3220 .part L_000001e395820088, 4, 1;
+L_000001e3957d3680 .part L_000001e395820088, 3, 1;
+L_000001e3957d6ed0 .part L_000001e395820088, 2, 1;
+L_000001e3957d7dd0 .part L_000001e395820088, 1, 1;
+L_000001e3957d6f70 .part L_000001e395820088, 4, 1;
+S_000001e3957761c0 .scope module, "m1" "mux_2" 3 33, 4 1 0, S_000001e395764d10;
+ .timescale -9 -10;
+    .port_info 0 /OUTPUT 32 "out";
+    .port_info 1 /INPUT 1 "select";
+    .port_info 2 /INPUT 32 "in0";
+    .port_info 3 /INPUT 32 "in1";
+v000001e39577a980_0 .net "in0", 31 0, L_000001e3957d7a10;  alias, 1 drivers
+v000001e39577b060_0 .net "in1", 31 0, L_000001e3957d7470;  alias, 1 drivers
+v000001e39577a8e0_0 .net "out", 31 0, L_000001e3957d6bb0;  alias, 1 drivers
+v000001e39577ac00_0 .net "select", 0 0, L_000001e3957d6f70;  1 drivers
+L_000001e3957d6bb0 .functor MUXZ 32, L_000001e3957d7a10, L_000001e3957d7470, L_000001e3957d6f70, C4<>;
+S_000001e395776350 .scope module, "m16" "mux_2" 3 13, 4 1 0, S_000001e395764d10;
+ .timescale -9 -10;
+    .port_info 0 /OUTPUT 32 "out";
+    .port_info 1 /INPUT 1 "select";
+    .port_info 2 /INPUT 32 "in0";
+    .port_info 3 /INPUT 32 "in1";
+v000001e39577aa20_0 .net "in0", 31 0, v000001e3957d1f60_0;  alias, 1 drivers
+v000001e39577a700_0 .net "in1", 31 0, L_000001e3957d30e0;  alias, 1 drivers
+v000001e39577afc0_0 .net "out", 31 0, L_000001e3957d2dc0;  alias, 1 drivers
+v000001e39577aac0_0 .net "select", 0 0, L_000001e3957d3220;  1 drivers
+L_000001e3957d2dc0 .functor MUXZ 32, v000001e3957d1f60_0, L_000001e3957d30e0, L_000001e3957d3220, C4<>;
+S_000001e395771f30 .scope module, "m2" "mux_2" 3 28, 4 1 0, S_000001e395764d10;
+ .timescale -9 -10;
+    .port_info 0 /OUTPUT 32 "out";
+    .port_info 1 /INPUT 1 "select";
+    .port_info 2 /INPUT 32 "in0";
+    .port_info 3 /INPUT 32 "in1";
+v000001e39577af20_0 .net "in0", 31 0, L_000001e3957d7bf0;  alias, 1 drivers
+v000001e39577b2e0_0 .net "in1", 31 0, L_000001e3957d6d90;  alias, 1 drivers
+v000001e39577aca0_0 .net "out", 31 0, L_000001e3957d7a10;  alias, 1 drivers
+v000001e39577a5c0_0 .net "select", 0 0, L_000001e3957d7dd0;  1 drivers
+L_000001e3957d7a10 .functor MUXZ 32, L_000001e3957d7bf0, L_000001e3957d6d90, L_000001e3957d7dd0, C4<>;
+S_000001e3957720c0 .scope module, "m4" "mux_2" 3 23, 4 1 0, S_000001e395764d10;
+ .timescale -9 -10;
+    .port_info 0 /OUTPUT 32 "out";
+    .port_info 1 /INPUT 1 "select";
+    .port_info 2 /INPUT 32 "in0";
+    .port_info 3 /INPUT 32 "in1";
+v000001e39577ab60_0 .net "in0", 31 0, L_000001e3957d35e0;  alias, 1 drivers
+v000001e39577a7a0_0 .net "in1", 31 0, L_000001e3957d6cf0;  alias, 1 drivers
+v000001e39577a840_0 .net "out", 31 0, L_000001e3957d7bf0;  alias, 1 drivers
+v000001e39577ad40_0 .net "select", 0 0, L_000001e3957d6ed0;  1 drivers
+L_000001e3957d7bf0 .functor MUXZ 32, L_000001e3957d35e0, L_000001e3957d6cf0, L_000001e3957d6ed0, C4<>;
+S_000001e39576e040 .scope module, "m8" "mux_2" 3 18, 4 1 0, S_000001e395764d10;
+ .timescale -9 -10;
+    .port_info 0 /OUTPUT 32 "out";
+    .port_info 1 /INPUT 1 "select";
+    .port_info 2 /INPUT 32 "in0";
+    .port_info 3 /INPUT 32 "in1";
+v000001e39577b380_0 .net "in0", 31 0, L_000001e3957d2dc0;  alias, 1 drivers
+v000001e39577ade0_0 .net "in1", 31 0, L_000001e3957d3540;  alias, 1 drivers
+v000001e39577b240_0 .net "out", 31 0, L_000001e3957d35e0;  alias, 1 drivers
+v000001e39577ae80_0 .net "select", 0 0, L_000001e3957d3680;  1 drivers
+L_000001e3957d35e0 .functor MUXZ 32, L_000001e3957d2dc0, L_000001e3957d3540, L_000001e3957d3680, C4<>;
+S_000001e39576e1d0 .scope module, "sll1" "left_shift_1" 3 32, 5 1 0, S_000001e395764d10;
+ .timescale 0 0;
+    .port_info 0 /INPUT 32 "in";
+    .port_info 1 /INPUT 1 "copyBit";
+    .port_info 2 /OUTPUT 32 "out";
+v000001e39577b100_0 .net *"_ivl_1", 30 0, L_000001e3957d6570;  1 drivers
+v000001e39577b1a0_0 .net *"_ivl_2", 0 0, L_000001e3957d7d30;  1 drivers
+v000001e39577b420_0 .net "copyBit", 0 0, L_000001e3957d7010;  alias, 1 drivers
+v000001e39577a520_0 .net "in", 31 0, L_000001e3957d7a10;  alias, 1 drivers
+v000001e39577a660_0 .net "out", 31 0, L_000001e3957d7470;  alias, 1 drivers
+L_000001e3957d6570 .part L_000001e3957d7a10, 0, 31;
+L_000001e3957d7d30 .concat [ 1 0 0 0], L_000001e3957d7010;
+L_000001e3957d7470 .concat [ 1 31 0 0], L_000001e3957d7d30, L_000001e3957d6570;
+S_000001e39571e170 .scope module, "sll16" "left_shift_16" 3 12, 6 1 0, S_000001e395764d10;
+ .timescale 0 0;
+    .port_info 0 /INPUT 32 "in";
+    .port_info 1 /INPUT 1 "copyBit";
+    .port_info 2 /OUTPUT 32 "out";
+v000001e3957d3860_0 .net *"_ivl_1", 15 0, L_000001e3957d3400;  1 drivers
+v000001e3957d23c0_0 .net *"_ivl_2", 15 0, L_000001e3957d2c80;  1 drivers
+v000001e3957d28c0_0 .net "copyBit", 0 0, L_000001e3957d7010;  alias, 1 drivers
+v000001e3957d3a40_0 .net "in", 31 0, v000001e3957d1f60_0;  alias, 1 drivers
+v000001e3957d32c0_0 .net "out", 31 0, L_000001e3957d30e0;  alias, 1 drivers
+L_000001e3957d3400 .part v000001e3957d1f60_0, 0, 16;
+LS_000001e3957d2c80_0_0 .concat [ 1 1 1 1], L_000001e3957d7010, L_000001e3957d7010, L_000001e3957d7010, L_000001e3957d7010;
+LS_000001e3957d2c80_0_4 .concat [ 1 1 1 1], L_000001e3957d7010, L_000001e3957d7010, L_000001e3957d7010, L_000001e3957d7010;
+LS_000001e3957d2c80_0_8 .concat [ 1 1 1 1], L_000001e3957d7010, L_000001e3957d7010, L_000001e3957d7010, L_000001e3957d7010;
+LS_000001e3957d2c80_0_12 .concat [ 1 1 1 1], L_000001e3957d7010, L_000001e3957d7010, L_000001e3957d7010, L_000001e3957d7010;
+L_000001e3957d2c80 .concat [ 4 4 4 4], LS_000001e3957d2c80_0_0, LS_000001e3957d2c80_0_4, LS_000001e3957d2c80_0_8, LS_000001e3957d2c80_0_12;
+L_000001e3957d30e0 .concat [ 16 16 0 0], L_000001e3957d2c80, L_000001e3957d3400;
+S_000001e3957d3de0 .scope module, "sll2" "left_shift_2" 3 27, 7 1 0, S_000001e395764d10;
+ .timescale 0 0;
+    .port_info 0 /INPUT 32 "in";
+    .port_info 1 /INPUT 1 "copyBit";
+    .port_info 2 /OUTPUT 32 "out";
+v000001e3957d3360_0 .net *"_ivl_1", 29 0, L_000001e3957d7ab0;  1 drivers
+v000001e3957d2fa0_0 .net *"_ivl_2", 1 0, L_000001e3957d7330;  1 drivers
+v000001e3957d3900_0 .net "copyBit", 0 0, L_000001e3957d7010;  alias, 1 drivers
+v000001e3957d2a00_0 .net "in", 31 0, L_000001e3957d7bf0;  alias, 1 drivers
+v000001e3957d3c20_0 .net "out", 31 0, L_000001e3957d6d90;  alias, 1 drivers
+L_000001e3957d7ab0 .part L_000001e3957d7bf0, 0, 30;
+L_000001e3957d7330 .concat [ 1 1 0 0], L_000001e3957d7010, L_000001e3957d7010;
+L_000001e3957d6d90 .concat [ 2 30 0 0], L_000001e3957d7330, L_000001e3957d7ab0;
+S_000001e39571e300 .scope module, "sll4" "left_shift_4" 3 22, 8 1 0, S_000001e395764d10;
+ .timescale -9 -10;
+    .port_info 0 /INPUT 32 "in";
+    .port_info 1 /INPUT 1 "copyBit";
+    .port_info 2 /OUTPUT 32 "out";
+v000001e3957d37c0_0 .net *"_ivl_1", 27 0, L_000001e3957d6e30;  1 drivers
+v000001e3957d2140_0 .net *"_ivl_2", 3 0, L_000001e3957d69d0;  1 drivers
+v000001e3957d2d20_0 .net "copyBit", 0 0, L_000001e3957d7010;  alias, 1 drivers
+v000001e3957d39a0_0 .net "in", 31 0, L_000001e3957d35e0;  alias, 1 drivers
+v000001e3957d3cc0_0 .net "out", 31 0, L_000001e3957d6cf0;  alias, 1 drivers
+L_000001e3957d6e30 .part L_000001e3957d35e0, 0, 28;
+L_000001e3957d69d0 .concat [ 1 1 1 1], L_000001e3957d7010, L_000001e3957d7010, L_000001e3957d7010, L_000001e3957d7010;
+L_000001e3957d6cf0 .concat [ 4 28 0 0], L_000001e3957d69d0, L_000001e3957d6e30;
+S_000001e39571cde0 .scope module, "sll8" "left_shift_8" 3 17, 9 1 0, S_000001e395764d10;
+ .timescale -9 -10;
+    .port_info 0 /INPUT 32 "in";
+    .port_info 1 /INPUT 1 "copyBit";
+    .port_info 2 /OUTPUT 32 "out";
+v000001e3957d21e0_0 .net *"_ivl_1", 23 0, L_000001e3957d34a0;  1 drivers
+v000001e3957d2460_0 .net *"_ivl_2", 7 0, L_000001e3957d3040;  1 drivers
+v000001e3957d3ae0_0 .net "copyBit", 0 0, L_000001e3957d7010;  alias, 1 drivers
+v000001e3957d2500_0 .net "in", 31 0, L_000001e3957d2dc0;  alias, 1 drivers
+v000001e3957d25a0_0 .net "out", 31 0, L_000001e3957d3540;  alias, 1 drivers
+L_000001e3957d34a0 .part L_000001e3957d2dc0, 0, 24;
+LS_000001e3957d3040_0_0 .concat [ 1 1 1 1], L_000001e3957d7010, L_000001e3957d7010, L_000001e3957d7010, L_000001e3957d7010;
+LS_000001e3957d3040_0_4 .concat [ 1 1 1 1], L_000001e3957d7010, L_000001e3957d7010, L_000001e3957d7010, L_000001e3957d7010;
+L_000001e3957d3040 .concat [ 4 4 0 0], LS_000001e3957d3040_0_0, LS_000001e3957d3040_0_4;
+L_000001e3957d3540 .concat [ 8 24 0 0], L_000001e3957d3040, L_000001e3957d34a0;
+    .scope S_000001e395764b80;
+T_0 ;
+    %pushi/vec4 4325, 0, 32;
+    %store/vec4 v000001e3957d1f60_0, 0, 32;
+    %pushi/vec4 0, 0, 32;
+    %store/vec4 v000001e3957d2280_0, 0, 32;
+    %end;
+    .thread T_0;
+    .scope S_000001e395764b80;
+T_1 ;
+    %delay 200, 0;
+    %vpi_call 2 19 "$display", "in:%b, shiftAmt:%b, copyBit:%b -> out:%b", v000001e3957d20a0_0, v000001e3957d2aa0_0, v000001e3957d1ec0_0, v000001e3957d2f00_0 {0 0 0};
+    %load/vec4 v000001e3957d1f60_0;
+    %inv;
+    %store/vec4 v000001e3957d1f60_0, 0, 32;
+    %delay 200, 0;
+    %vpi_call 2 22 "$display", "in:%b, shiftAmt:%b, copyBit:%b -> out:%b", v000001e3957d20a0_0, v000001e3957d2aa0_0, v000001e3957d1ec0_0, v000001e3957d2f00_0 {0 0 0};
+    %pushi/vec4 1, 0, 32;
+    %store/vec4 v000001e3957d2280_0, 0, 32;
+    %delay 200, 0;
+    %vpi_call 2 25 "$display", "in:%b, shiftAmt:%b, copyBit:%b -> out:%b", v000001e3957d20a0_0, v000001e3957d2aa0_0, v000001e3957d1ec0_0, v000001e3957d2f00_0 {0 0 0};
+    %end;
+    .thread T_1;
+# The file index is used to find the file name in the following table.
+:file_names 10;
+    "N/A";
+    "<interactive>";
+    ".\left_shift_32_barrel_tb.v";
+    ".\left_shift_32_barrel.v";
+    "..\mux\mux_2.v";
+    ".\left_shift_1.v";
+    ".\left_shift_16.v";
+    ".\left_shift_2.v";
+    ".\left_shift_4.v";
+    ".\left_shift_8.v";
