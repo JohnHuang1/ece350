@@ -25,7 +25,7 @@ module regfile (
 		for(i = 1; i < 32; i = i + 1) begin: reg_loop
 			wire [31:0] reg_out;
 			reg32 register(.data(data_writeReg),
-				.write_enable(write_rd[i]), .clk(clock), .clear(ctrl_reset),
+				.write_enable(write_rd[i]), .clk(~clock), .clear(ctrl_reset),
 				.out(reg_out));
 			
 			assign data_readRegA = readA_reg[i] ? reg_out : 32'bz;
