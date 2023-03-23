@@ -84,8 +84,8 @@ module processor(
     reg32 fd_ir_reg(.data(q_imem), .out(fd_ir_out), .write_enable(1'b1), .clk(clock), .clear(reset));
 
     // Decode
-    assign ctrl_readRegA = fd_ir_out[21:17];
-    assign ctrl_readRegB = fd_ir_out[16:12];
+    assign ctrl_readRegA = fd_ir_out[21:17]; // Gets $rs from R-type inst.
+    assign ctrl_readRegB = fd_ir_out[16:12]; // Gets $rt from R-type inst.
 
     // D/X regs
     wire[31:0] dx_pc_out, dx_ir_out, dx_a_out, dx_b_out;
