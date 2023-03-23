@@ -84,8 +84,16 @@ module processor(
     reg32 fd_ir_reg(.data(q_imem), .out(fd_ir_out), .write_enable(1'b1), .clk(clock), .clear(reset));
 
     // Decode
+    wire [31:0] ddo; //decoded decode stage opcode
+    decoder32 d_opcode_decoder(.select(fd_ir_out[31:27]), .out(ddo), .enable(1'b1));
     assign ctrl_readRegA = fd_ir_out[21:17]; // Gets $rs from R-type inst.
-    assign ctrl_readRegB = fd_ir_out[16:12]; // Gets $rt from R-type inst.
+    assign ctrl_readRegB = |{ddo[7], ddo[2], ddo[4], ddo[6]} ? fd_ir_out[26:22] : fd_ir_out[16:12]; 
+        // Gets $rt from R-type inst.
+        // Gets $rd from I/JII-type inst.
+            // sw (00111)
+            // bne (00010)
+            // jr (00100)
+            // blt (00110)
 
     // D/X regs
     wire[31:0] dx_pc_out, dx_ir_out, dx_a_out, dx_b_out;
@@ -135,10 +143,13 @@ module processor(
     reg32 xm_ir_reg(.data(xm_ir_in), .out(xm_ir_out), .write_enable(1'b1), .clk(clock), .clear(reset));
     reg32 xm_o_reg(.data(alu_out), .out(xm_o_out), .write_enable(1'b1), .clk(clock), .clear(reset));
     reg32 xm_b_reg(.data(dx_b_out), .out(xm_b_out), .write_enable(1'b1), .clk(clock), .clear(reset));
+    wire [31:0] dmo; //decoded memory stage opcode
 
     // Memory
     assign address_dmem = xm_o_out;
     assign data = xm_b_out;
+    decoder32 m_opcode_decoder(.select(xm_ir_out[31:27]), .out(dmo), .enable(1'b1));
+    assign wren = dmo[7]; // Data Memory write enable when opcode sw (00111)
 
     // M/W regs
     wire[31:0] mw_ir_out, mw_o_out, mw_d_out;
