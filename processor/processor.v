@@ -347,13 +347,13 @@ module processor(
 
 
     // Stall Logic for LW (Stall any instr that reads the lw rd reg)
-    wire fd_op_reads_rd = dxo[2] || dxo[4] || dxo[6];
+    wire fd_op_reads_rd = ddo[2] || ddo[4] || ddo[6];
         // The following opcodes read from $rd fd_ir[26:22]
             // bne (00010)
             // jr (00100)
             // blt (00110)
             // sw (00111) (don't need this one because of w to m stage bypass)
-    wire fd_op_reads_rs = dxo[0] || dxo[2] || dxo[5] || dxo[6] || dxo[7] || dxo[8];
+    wire fd_op_reads_rs = ddo[0] || ddo[2] || ddo[5] || ddo[6] || ddo[7] || ddo[8];
         // if opcode is one of following then it reads from $rs (fd_ir[21:17])
             // alu_op (00000)
             // bne (00010)
@@ -361,9 +361,9 @@ module processor(
             // blt (00110)
             // sw (00111)
             // lw (01000)
-    wire fd_op_reads_rt = dxo[0];
+    wire fd_op_reads_rt = ddo[0];
         // if opcode is alu_op (00000) then $rt is read from fd_ir[16:12]
-    wire fd_op_reads_status = dxo[22];
+    wire fd_op_reads_status = ddo[22];
         // if op == bex (10110) then will read $r30 ($rstatus)
 
     wire stall = dxo[8] && (

@@ -47,23 +47,52 @@ Cycle 134: Wrote 3828 into register 9
 Cycle 136: Wrote 3837 into register 2
 Cycle 137: Wrote 256 into register 29
 Cycle 138: Wrote 78 into register 31
+Cycle 143: Wrote 3837 into register 8
+Cycle 144: Wrote 3837 into register 4
+Cycle 145: Wrote 81 into register 31
+Cycle 149: Wrote 257 into register 29
+Cycle 150: Wrote 0 into register 15
+Cycle 151: Wrote 3837 into register 8
+Cycle 152: Wrote 3837 into register 9
+Cycle 156: Wrote 3834 into register 14
+Cycle 161: Wrote 3 into register 10
+Cycle 162: Wrote 1 into register 11
+Cycle 165: Wrote 1 into register 15
+Cycle 166: Wrote 0 into register 12
+Cycle 173: Wrote 3831 into register 13
+Cycle 183: Wrote 3834 into register 8
+Cycle 184: Wrote 3834 into register 9
+Cycle 185: Wrote 3837 into register 14
+Cycle 190: Wrote 1 into register 10
+Cycle 191: Wrote 3 into register 11
+Cycle 196: Wrote 3837 into register 9
+Cycle 197: Wrote 3831 into register 14
+Cycle 202: Wrote 3 into register 10
+Cycle 203: Wrote 4 into register 11
+Cycle 208: Wrote 3831 into register 9
+Cycle 209: Wrote 3828 into register 14
+Cycle 214: Wrote 4 into register 10
+Cycle 215: Wrote 2 into register 11
+Cycle 218: Wrote 1 into register 15
+Cycle 219: Wrote 3837 into register 12
+Cycle 226: Wrote 0 into register 13
 ============== Testing Mode ==============
 Reg  0:           0
 Reg  1:           0
 Reg  2:        3837
 Reg  3:           0
-Reg  4:           3
+Reg  4:        3837
 Reg  5:           0
 Reg  6:           0
 Reg  7:           0
-Reg  8:          54
-Reg  9:        3828
-Reg 10:           0
-Reg 11:        3837
-Reg 12:           0
+Reg  8:        3834
+Reg  9:        3831
+Reg 10:           4
+Reg 11:           2
+Reg 12:        3837
 Reg 13:           0
-Reg 14:           0
-Reg 15:           0
+Reg 14:        3828
+Reg 15:           1
 Reg 16:           0
 Reg 17:           0
 Reg 18:           0
@@ -77,6 +106,6 @@ Reg 25:           0
 Reg 26:           0
 Reg 27:        3828
 Reg 28:           0
-Reg 29:         256
+Reg 29:         257
 Reg 30:           0
-Reg 31:          78
+Reg 31:          81
