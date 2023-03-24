@@ -35,7 +35,7 @@ module Wrapper (clock, reset);
 
 
 	// ADD YOUR MEMORY FILE HERE
-	localparam INSTR_FILE = "alu_exc_w_bp";
+	localparam INSTR_FILE = "multdiv_slow_nbp";
 	
 	// Main Processing Unit
 	processor CPU(.clock(clock), .reset(reset), 

@@ -243,9 +243,10 @@ module processor(
 
     // Multdiv
     wire[31:0] multdiv_op_a, multdiv_op_b, multdiv_result;
-    wire ctrl_MULT, ctrl_DIV, clock, multdiv_ex, multdiv_resultRDY, multdiv_active;
-    multdiv mult_div_module(.data_operandA(multdiv_op_a), .data_operandB(multdiv_op_b), .ctrl_MULT(ctrl_MULT), .ctrl_DIV(ctrl_DIV), .clock(clock), .data_result(multdiv_result), .data_exception(multdiv_ex), .data_resultRDY(multdiv_resultRDY), .module_running(multdiv_active));
+    wire ctrl_MULT, ctrl_DIV, clock, multdiv_ex, multdiv_resultRDY, multdiv_active, multdiv_running;
+    multdiv mult_div_module(.data_operandA(multdiv_op_a), .data_operandB(multdiv_op_b), .ctrl_MULT(ctrl_MULT), .ctrl_DIV(ctrl_DIV), .clock(clock), .data_result(multdiv_result), .data_exception(multdiv_ex), .data_resultRDY(multdiv_resultRDY), .module_running(multdiv_running));
 
+    assign multdiv_active = multdiv_running || ctrl_DIV || ctrl_MULT;
     wire [31:0] p_data, p_ir_out, p_ir_final;
     wire pw_p_ex_out, pw_p_rdy_out;
     // reg32 pw_p_reg(.data(multdiv_result), .out(pw_p_out), .write_enable(multdiv_resultRDY), .clk(clock), .clear(reset));
