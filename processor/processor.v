@@ -136,13 +136,11 @@ module processor(
     decoder32 x_alu_opcode_decoder(.select(alu_opcode), .out(dxao), .enable(1'b1));
 
     // On overflow
-    wire is_of_opcode = dxao[0] || dxao[1] || dxo[5] || dxao[6] || dxao[7];
+    wire is_of_opcode = dxao[0] || dxao[1] || dxo[5];
         // The following alu_opcodes can overflow
             // add (00000)
             // sub (00001)
             // addi (which is just add)
-            // mul (00110)
-            // div (00111)
     assign alu_result = is_of_opcode && alu_of ? alu_ex_code : alu_out;
 
     assign updated_rd = (is_of_opcode && alu_of) || dxo[21] ? 5'b11110 : (dxo[3] ? 5'b11111 : dx_ir_out[26:22]);
@@ -156,11 +154,11 @@ module processor(
 
 
     // Assigning overflow values
-    assign alu_ex_code = dxao[0] ? 32'd1 : {32{1'bz}}; // add
-    assign alu_ex_code = dxao[1] ? 32'd3 : {32{1'bz}}; // sub
-    assign alu_ex_code = dxo[5] ? 32'd2 : {32{1'bz}}; // addi
-    assign alu_ex_code = dxao[6] ? 32'd4 : {32{1'bz}}; // mul
-    assign alu_ex_code = dxao[7] ? 32'd5 : {32{1'bz}}; // div
+    assign alu_ex_code = dxo[5] ? 32'd2 : 
+            (dxo[0] ? 
+                (dxao[0] ? 32'd1 : 
+                (dxao[1] ? 32'd3 : 32'd0))
+            : 32'd0);
 
 
     // Branch logic
@@ -240,6 +238,31 @@ module processor(
             // jal 00011
             // setx 10101
             // lw 01000
+
+    // Multdiv
+    wire[31:0] multdiv_op_a, multdiv_op_b, multdiv_result;
+    wire ctrl_MULT, ctrl_DIV, clock, multdiv_ex, multdiv_resultRDY;
+    multdiv mult_div_module(.data_operandA(multdiv_op_a), .data_operandB(multdiv_op_b), .ctrl_MULT(ctrl_MULT), .ctrl_DIV(ctrl_DIV), .clock(clock), .data_result(multdiv_result), .data_exception(multdiv_ex), .data_resultRDY(multdiv_resultRDY));
+
+    wire [31:0] pw_w_data, pw_p_out, pw_ir_out;
+    wire pw_p_ex_out, pw_p_rdy_out;
+    wire multdiv_active;
+    reg32 pw_p_reg(.data(multdiv_result), .out(pw_p_out), .write_enable(multdiv_resultRDY), .clk(n_clock), .clear(reset));
+    reg32 pw_ir_reg(.data(dx_ir_out), .out(pw_ir_out), .write_enable(ctrl_MULT || ctrl_DIV || ~multdiv_active), .clk(n_clock), .clear(reset));
+    dffe_ref pw_p_ex_reg(.q(pw_p_ex_out), .d(multdiv_ex), .clk(n_clock), .en(multdiv_resultRDY), .clr(reset));
+    dffe_ref pw_p_rdy_reg(.q(pw_p_rdy_out), .d(multdiv_resultRDY), .clk(n_clock), .en(1'b1), .clr(reset));
+
+    assign multdiv_op_a = bypassed_a;
+    assign multdiv_op_b = bypassed_b;
+    assign ctrl_MULT = dxo[0] && dxao[6];
+    assign ctrl_DIV = dxo[0] && dxao[7];
+
+    dffe_ref p_latch(.q(multdiv_active), .d(ctrl_MULT || ctrl_DIV), .clk(n_clock), .en(ctrl_MULT || ctrl_DIV), .clr(multdiv_resultRDY || reset));
+
+    wire[4:0] p_reg = multdiv_ex ? 5'b11110 : dx_ir_rd;
+    assign pw_w_data = multdiv_ex ? (pw_ir_out[6:2] == 5'b00111 ? 32'd5 : 32'd4) : multdiv_result;
+
+    wire pw_ir_is_multdiv_and_rdy = pw_p_rdy_out && pw_ir_out[31:27] == 5'd0 && (pw_ir_out[6:2] == 5'b00110 || pw_ir_out[6:2] == 5'b00111);
 
     // Bypass logic
     wire bp_xm_a, bp_mw_a, bp_xm_b, bp_mw_b, bp_mw_dm; // "bypass_(stage reg)_a/b/dm"
@@ -345,9 +368,10 @@ module processor(
         (fd_op_reads_rs && (dx_ir_rd == fd_ir_out[21:17])) ||
         (fd_op_reads_rt && (dx_ir_rd == fd_ir_out[16:12])) ||
         (fd_op_reads_status && (dx_ir_rd == 5'b11110))
-    );
+    ) || multdiv_active;
         // stall if dx_ir_op == lw (01000) && 
             // (fd op reads reg_xx) && (reg_xx == dx_ir_rd) (this but all cases)
+        // also stall if multdiv is active
     assign pc_reg_wren = ~stall;
     assign fd_wren = ~stall;
     assign dx_add_nop = stall || pc_branch_wren;

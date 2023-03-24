@@ -1,4 +1,4 @@
-module counter_mod64 (
+module counter_mod32 (
     input clock, reset, enable,
     output [5:0] q
 );
