@@ -67,38 +67,42 @@ module processor(
 	// Program Counter
 
     wire [31:0] pc_in, pc_out, pc_inc_out;
+    wire[31:0] pc_data, pc_wren; // PC write enable and corresponding data signal
     wire pc_write;
     assign pc_write = 1'b1;
 	reg32 pc_reg(.data(pc_in), .out(pc_out), .write_enable(pc_write), .clk(clock), .clear(reset));
 
     cla32bit pc_incrementer(.sum(pc_inc_out), .a(pc_out), .b({32{1'b0}}), .Cin(1'b1)); // add 1 to pc out
 
-    assign pc_in = pc_inc_out;
+    assign pc_in = pc_wren ? pc_data : pc_inc_out; // Write to pc reg depending on pc_wren
 
     // Get Instruction
     assign address_imem = pc_out;
 
     // F/D regs
-    wire[31:0] fd_pc_out, fd_ir_out;
+    wire[31:0] fd_pc_out, fd_ir_in, fd_ir_out;
+    assign fd_ir_in = pc_wren ? {32'd0} : q_imem; // If branch occurs, nop flushed in
     reg32 fd_pc_reg(.data(pc_inc_out), .out(fd_pc_out), .write_enable(1'b1), .clk(clock), .clear(reset));
-    reg32 fd_ir_reg(.data(q_imem), .out(fd_ir_out), .write_enable(1'b1), .clk(clock), .clear(reset));
+    reg32 fd_ir_reg(.data(fd_ir_in), .out(fd_ir_out), .write_enable(1'b1), .clk(clock), .clear(reset));
 
     // Decode
     wire [31:0] ddo; //decoded decode stage opcode
     decoder32 d_opcode_decoder(.select(fd_ir_out[31:27]), .out(ddo), .enable(1'b1));
     assign ctrl_readRegA = fd_ir_out[21:17]; // Gets $rs from R-type inst.
-    assign ctrl_readRegB = |{ddo[7], ddo[2], ddo[4], ddo[6]} ? fd_ir_out[26:22] : fd_ir_out[16:12]; 
+    assign ctrl_readRegB = |{ddo[7], ddo[2], ddo[4], ddo[6]} ? fd_ir_out[26:22] : (dxo[22] ? 5'b11110 : fd_ir_out[16:12]); 
         // Gets $rt from R-type inst.
         // Gets $rd from I/JII-type inst.
             // sw (00111)
             // bne (00010)
             // jr (00100)
             // blt (00110)
+        // Gets $r30 (rstatus) if bex (10110)
 
     // D/X regs
-    wire[31:0] dx_pc_out, dx_ir_out, dx_a_out, dx_b_out;
+    wire[31:0] dx_pc_out, dx_ir_in, dx_ir_out, dx_a_out, dx_b_out;
+    assign dx_ir_in = pc_wren ? {32'd0} : fd_ir_out; // If branch occurs, nop flushed in
     reg32 dx_pc_reg(.data(fd_pc_out), .out(dx_pc_out), .write_enable(1'b1), .clk(clock), .clear(reset));
-    reg32 dx_ir_reg(.data(fd_ir_out), .out(dx_ir_out), .write_enable(1'b1), .clk(clock), .clear(reset));
+    reg32 dx_ir_reg(.data(dx_ir_in), .out(dx_ir_out), .write_enable(1'b1), .clk(clock), .clear(reset));
     reg32 dx_a_reg(.data(data_readRegA), .out(dx_a_out), .write_enable(1'b1), .clk(clock), .clear(reset));
     reg32 dx_b_reg(.data(data_readRegB), .out(dx_b_out), .write_enable(1'b1), .clk(clock), .clear(reset));
 
@@ -128,20 +132,41 @@ module processor(
     assign alu_ex_code = dxo[5] ? 32'd3 : {32{1'bz}};
 
     // Branch logic
-    // wire[31:0] on_branch_pc, pc_adder_out;
-    // wire[4:0] x_opcode = dx_ir_out[31:27];
+    wire[31:0] on_branch_pc, pc_adder_out;
 
-    // cla32bit pc_adder(.a(dx_pc_out), .b(sx_immediate), .sum(pc_adder_out));
-    // assign on_branch_pc = x_opcode == 5'b00010 || x_opcode == 5'b00110 ? pc_adder_out : {32{1'bz}};
+    cla32bit pc_adder(.a(dx_pc_out), .b(sx_immediate), .sum(pc_adder_out));
+    wire opcode_is_branch_N = dxo[2] || dxo[6];
+    assign on_branch_pc = opcode_is_branch_N ? pc_adder_out : {32{1'bz}};
+        // Branch for bne (00010) and blt (00110)
+            // If so, branch pc = PC + 1 + N
+            // if not, line set to high impedance (z's)
 
-    // wire [31:0] target = {5'b00000, dx_ir_out[26:0]};
-    // assign on_branch_pc = x_opcode == 5'b00001 || x_opcode == 5'b00011 || x_opcode == 5'b10110 ? target : {32{1'bz}};
+    wire [31:0] target = {5'b00000, dx_ir_out[26:0]};
+    wire opcode_is_branch_T = dxo[1] || dxo[3] || dxo[22];
+    assign on_branch_pc = opcode_is_branch_T ? target : {32{1'bz}};
+        // branch for j (00001), jal (00011), and bex (10110)
+            // If so, branch pc = T
+            // if not, line set to high impedance (z's)
 
+    wire opcode_is_branch_rd = dxo[4];
+    assign on_branch_pc = opcode_is_branch_rd ? dx_b_out : {32{1'bz}};
+        // branch for jr (001000)
+            // branch pc = regfile b value
+            // if not, line set to high impedance (z's)
+
+    wire bne_condition = dxo[2] || alu_neq; // True if $rs != $rd
+    wire blt_condition = dxo[6] || (alu_neq && ~alu_lt); // True if ($rs != $rd) && !($rs < $rd)
+    wire bex_condition = dxo[22] || ~|{dx_b_out}; // if bex opcode then dx_b_out will have $rstatus. True if $rstatus == 0
+
+    wire pc_direct_assign = dxo[1] || dxo[3] || dxo[4]; // opcodes that directly assign pc (j, jal, jr)
+    assign pc_wren = pc_direct_assign || bne_condition || blt_condition || bex_condition;
+    assign pc_data = on_branch_pc;
 
     // X/M regs
-    wire[31:0] xm_ir_out, xm_o_out, xm_b_out;
+    wire[31:0] xm_ir_out, xm_o_in, xm_o_out, xm_b_out;
+    assign xm_o_in = dxo[3] ? dx_pc_out : alu_result; // x/m O reg = pc + 1 if jal (00011) else alu_result
     reg32 xm_ir_reg(.data(xm_ir_in), .out(xm_ir_out), .write_enable(1'b1), .clk(clock), .clear(reset));
-    reg32 xm_o_reg(.data(alu_out), .out(xm_o_out), .write_enable(1'b1), .clk(clock), .clear(reset));
+    reg32 xm_o_reg(.data(xm_o_in), .out(xm_o_out), .write_enable(1'b1), .clk(clock), .clear(reset));
     reg32 xm_b_reg(.data(dx_b_out), .out(xm_b_out), .write_enable(1'b1), .clk(clock), .clear(reset));
     wire [31:0] dmo; //decoded memory stage opcode
 
