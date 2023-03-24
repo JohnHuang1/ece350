@@ -132,8 +132,17 @@ module processor(
             // do add (5'b00000)
     assign alu_shamt = dx_ir_out[11:7];
 
+    wire [31:0] dxao; //decoded execute stage alu opcode
+    decoder32 x_alu_opcode_decoder(.select(alu_opcode), .out(dxao), .enable(1'b1));
+
     // On overflow
-    wire is_of_opcode = alu_opcode == 5'b00000 || alu_opcode == 5'b00001 || dxo[5];
+    wire is_of_opcode = dxao[0] || dxao[1] || dxo[5] || dxao[6] || dxao[7];
+        // The following alu_opcodes can overflow
+            // add (00000)
+            // sub (00001)
+            // addi (which is just add)
+            // mul (00110)
+            // div (00111)
     assign alu_result = is_of_opcode && alu_of ? alu_ex_code : alu_out;
 
     assign updated_rd = (is_of_opcode && alu_of) || dxo[21] ? 5'b11110 : (dxo[3] ? 5'b11111 : dx_ir_out[26:22]);
@@ -147,9 +156,12 @@ module processor(
 
 
     // Assigning overflow values
-    assign alu_ex_code = alu_opcode == 5'b00000 ? 32'd1 : {32{1'bz}};
-    assign alu_ex_code = alu_opcode == 5'b00001 ? 32'd2 : {32{1'bz}};
-    assign alu_ex_code = dxo[5] ? 32'd3 : {32{1'bz}};
+    assign alu_ex_code = dxao[0] ? 32'd1 : {32{1'bz}}; // add
+    assign alu_ex_code = dxao[1] ? 32'd3 : {32{1'bz}}; // sub
+    assign alu_ex_code = dxo[5] ? 32'd2 : {32{1'bz}}; // addi
+    assign alu_ex_code = dxao[6] ? 32'd4 : {32{1'bz}}; // mul
+    assign alu_ex_code = dxao[7] ? 32'd5 : {32{1'bz}}; // div
+
 
     // Branch logic
     wire[31:0] on_branch_pc, pc_adder_out;

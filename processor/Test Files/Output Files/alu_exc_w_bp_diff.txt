@@ -1,0 +1,4 @@
+Reg:  4 Expected:           0 Actual:           z
+Reg: 20 Expected:         202 Actual:           X
+Reg: 21 Expected:       12965 Actual:           X
+Reg: 30 Expected:           0 Actual:           X
