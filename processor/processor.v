@@ -169,14 +169,14 @@ module processor(
             // if not, line set to high impedance (z's)
 
     wire opcode_is_branch_rd = dxo[4];
-    assign on_branch_pc = opcode_is_branch_rd ? dx_b_out : {32{1'bz}};
+    assign on_branch_pc = opcode_is_branch_rd ? bypassed_b : {32{1'bz}};
         // branch for jr (001000)
             // branch pc = regfile b value
             // if not, line set to high impedance (z's)
 
     wire bne_condition = dxo[2] && alu_neq; // True if x op == bne (00010) && $rs != $rd
     wire blt_condition = dxo[6] && (alu_neq && ~alu_lt); // True if x op == blt (00110) && ($rs != $rd) && !($rs < $rd)
-    wire bex_condition = dxo[22] && ~|{bypassed_b}; // if bex opcode (10110) then dx_b_out will have $rstatus. True if $rstatus == 0
+    wire bex_condition = dxo[22] && (bypassed_b != 5'd0); // if bex opcode (10110) then dx_b_out will have $rstatus. True if $rstatus != 0
 
     wire pc_direct_assign = dxo[1] || dxo[3] || dxo[4]; // opcodes that directly assign pc (j, jal, jr)
     assign pc_branch_wren = pc_direct_assign || bne_condition || blt_condition || bex_condition;
