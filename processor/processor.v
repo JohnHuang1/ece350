@@ -67,7 +67,8 @@ module processor(
 	// Program Counter
 
     wire [31:0] pc_in, pc_out, pc_inc_out;
-    wire[31:0] pc_data, pc_wren; // PC write enable and corresponding data signal
+    wire[31:0] pc_data; // PC corresponding data signal
+    wire pc_wren; // PC write enable
     wire pc_write;
     assign pc_write = 1'b1;
 	reg32 pc_reg(.data(pc_in), .out(pc_out), .write_enable(pc_write), .clk(clock), .clear(reset));
@@ -112,6 +113,7 @@ module processor(
     wire [4:0] alu_opcode, alu_shamt;
     wire [31:0] bypassed_a, bypassed_b; // Bypassed values 
     wire [31:0] dxo; //decoded execute stage opcode
+    wire [4:0] updated_rd;
     decoder32 x_opcode_decoder(.select(dx_ir_out[31:27]), .out(dxo), .enable(1'b1));
     wire alu_neq, alu_lt, alu_of;
     alu math_unit(.data_operandA(alu_opA), .data_operandB(alu_opB), .data_result(alu_out), .ctrl_ALUopcode(alu_opcode), .ctrl_shiftamt(alu_shamt), .isNotEqual(alu_neq), .isLessThan(alu_lt), .overflow(alu_of));
@@ -125,7 +127,16 @@ module processor(
     // On overflow
     wire is_of_opcode = alu_opcode == 5'b00000 || alu_opcode == 5'b00001 || dxo[5];
     assign alu_result = is_of_opcode && alu_of ? alu_ex_code : alu_out;
-    assign xm_ir_in = is_of_opcode && alu_of ? {dx_ir_out[31:27], 5'b11110, dx_ir_out[21:0]} : dx_ir_out; // if overflow then set $rd to $r30 (rstatus)
+
+    assign updated_rd = (is_of_opcode && alu_of) || dxo[21] ? 5'b11110 : (dxo[3] ? 5'b11111 : dx_ir_out[26:22]);
+    // sets xm_ir_in[26:22] = val
+    // if (is_of_opcode && alu_of) || dx_ir_op == setx (10101)
+        // val = $r30 ($rstatus)
+    // else if dx_ir_op == jal (00011)
+        // val = $r31 ($ra)
+    // else
+        // val = dx_ir_out[26:22] (default)
+
 
     // Assigning overflow values
     assign alu_ex_code = alu_opcode == 5'b00000 ? 32'd1 : {32{1'bz}};
@@ -155,9 +166,9 @@ module processor(
             // branch pc = regfile b value
             // if not, line set to high impedance (z's)
 
-    wire bne_condition = dxo[2] || alu_neq; // True if $rs != $rd
-    wire blt_condition = dxo[6] || (alu_neq && ~alu_lt); // True if ($rs != $rd) && !($rs < $rd)
-    wire bex_condition = dxo[22] || ~|{bypassed_b}; // if bex opcode then dx_b_out will have $rstatus. True if $rstatus == 0
+    wire bne_condition = dxo[2] && alu_neq; // True if x op == bne (00010) && $rs != $rd
+    wire blt_condition = dxo[6] && (alu_neq && ~alu_lt); // True if x op == blt (00110) && ($rs != $rd) && !($rs < $rd)
+    wire bex_condition = dxo[22] && ~|{bypassed_b}; // if bex opcode (10110) then dx_b_out will have $rstatus. True if $rstatus == 0
 
     wire pc_direct_assign = dxo[1] || dxo[3] || dxo[4]; // opcodes that directly assign pc (j, jal, jr)
     assign pc_wren = pc_direct_assign || bne_condition || blt_condition || bex_condition;
@@ -165,6 +176,7 @@ module processor(
 
     // X/M regs
     wire[31:0] xm_ir_out, xm_o_in, xm_o_out, xm_b_out;
+    assign xm_ir_in = {dx_ir_out[31:27], updated_rd, dx_ir_out[21:0]};
     assign xm_o_in = dxo[3] ? dx_pc_out : (dxo[21] ? target : alu_result); 
         // Muxing xm_o_in
         // if jal (00011) 
@@ -180,7 +192,7 @@ module processor(
     // Memory
     wire[31:0] bypassed_dm;
     assign address_dmem = xm_o_out;
-    assign data =  bypassed_dm;
+    assign data = bypassed_dm;
     wire [31:0] dmo; //decoded memory stage opcode
     decoder32 m_opcode_decoder(.select(xm_ir_out[31:27]), .out(dmo), .enable(1'b1));
     assign wren = dmo[7]; // Data Memory write enable when opcode sw (00111)
@@ -194,9 +206,8 @@ module processor(
     // Write
     wire[31:0] dwo;
     decoder32 w_opcode_decoder(.select(mw_ir_out[31:27]), .out(dwo), .enable(1'b1));
-    assign ctrl_writeReg = dwo[21] ? 5'b11110 : mw_ir_out[26:22];
-        // if setx (10101)
-            // write reg = $rstatus ($r30)
+    assign ctrl_writeReg = mw_ir_out[26:22];
+        // write reg = mw_ir_out[26:22] for all cases
     assign data_writeReg = dwo[8] ? mw_d_out : mw_o_out;
         // if lw (01000) then 
             // write data from memory to reg
@@ -228,11 +239,14 @@ module processor(
         // else
             // dx_a/b_out value is used (normal value)
 
-    wire xm_op_is_write_to_reg = dmo[0] || dmo[5] || dmo[8];
+    wire xm_op_is_write_to_reg = dmo[0] || dmo[5] || dmo[8] || dmo[3] || dmo[21];
         // if opcode is one of following then it writes to reg defined by xm_ir[26:22]
             // alu_op (00000)
             // addi (00101)
             // lw (01000)
+            // jal (00011)
+            // setx (10101) 
+                // Both jal and setx are JI-type instr but their dest reg is set in xm_ir[26:22]
 
     wire dx_op_is_read_rs = dxo[0] || dxo[2] || dxo[5] || dxo[6] || dxo[7] || dxo[8];
         // if opcode is one of following then it reads from $rs (ir[21:17])
@@ -243,31 +257,14 @@ module processor(
             // sw (00111)
             // lw (01000)
     wire [4:0] dx_ir_rs = dx_ir_out[21:17];
+    wire [4:0] xm_ir_rd = xm_ir_out[26:22];
 
     // Bypass logic for val a (bypass into execute stage)
-    assign bp_xm_a = dx_op_is_read_rs && (
-            (xm_op_is_write_to_reg && (xm_ir_out[26:22] == dx_ir_rs))
-            || (dmo[21] && (dx_ir_rs == 5'b11110))
-            || (dmo[3] && (dx_ir_rs == 5'b11111)));
-        // True if dx_op_is_read_rs &&
-            // xm_op_is_write_to_reg  && xm_ir_rd == dx_ir_rs
-            // or xm_ir_op == setx (10101) && (dx_ir_rs == $rstatus)
-            // or xm_ir_op == jal (00011) && (dx_ir_rs == $r31)
+    assign bp_xm_a = dx_op_is_read_rs && xm_op_is_write_to_reg && (xm_ir_rd == dx_ir_rs);
+        // True if (x op reads rs) && (m op write rd) && (x stage rs reg == m stage rd reg)
 
-    wire mw_op_is_write_to_reg = dwo[0] || dwo[5] || dwo[8];
-    // if opcode from m/w reg is one of following then it writes to reg
-        // alu_op (00000)
-        // addi (00101)
-        // lw (01000)
-
-    assign bp_mw_a = dx_op_is_read_rs && (
-            (mw_op_is_write_to_reg && (mw_ir_out[26:22] == dx_ir_rs))
-            || (dwo[21] && (dx_ir_rs == 5'b11110))
-            || (dwo[3] && (dx_ir_rs == 5'b11111)));
-        // True if dx_op_is_read_rs && 
-            // mw_op_is_write_to_reg && (mw_ir_rd == dx_ir_rs)
-            // or mw_ir_op == setx (10101) && (dx_ir_rs == $rstatus)
-            // or mw_ir_op == jal (00011) && (dx_ir_rs == $r31)
+    assign bp_mw_a = dx_op_is_read_rs && ctrl_writeEnable && (ctrl_writeReg == dx_ir_rs);
+        // True if dx_op_is_read_rs && (w stage is writing) && (w stage reg == x stage rs reg)
 
     // Bypass logic for val b (bypass into execute stage)
     wire dx_op_is_read_rt = dxo[0];
@@ -279,18 +276,6 @@ module processor(
             // blt (00110)
             // sw (00111)
 
-    wire [4:0] xm_write_reg = xm_op_is_write_to_reg ? xm_ir_out[26:22] : (dmo[21] ? 5'b11110 : (dmo[3] ? 5'b11111 : 5'bzzzzz))
-    wire [4:0] mw_write_reg = mw_op_is_write_to_reg ? mw_ir_out[26:22] : (dwo[21] ? 5'b11110 : (dwo[3] ? 5'b11111 : 5'bzzzzz))
-        // assign st_write_reg (value of which is the reg which a certain stage (st) ir has an updated value for)
-        // if st_op_is_write_to_reg
-            // = st_ir_rd
-        // else if st_ir_op == setx (10101)
-            // = $r30
-        // else if st_ir_op == jal (00011)
-            // = $r31
-        // else
-            // = zzzzz
-
     wire [4:0] dx_b_read_reg = dx_op_is_read_rt ? dx_ir_out[16:12] : (dx_op_is_read_rd ? dx_ir_out[26:22] : 5'bzzzzz);
         // assign dx_b_read_reg (which reg dx stage is reading from for val b)
         // if dx_op_is_read_rt
@@ -299,14 +284,14 @@ module processor(
             // = dx_ir_rd ir[26:22]
         // else
             // = zzzzz
+    wire dx_is_read_rt_rd = dx_op_is_read_rd || dx_op_is_read_rt;
+    assign bp_xm_b = xm_op_is_write_to_reg && dx_is_read_rt_rd && (xm_ir_rd == dx_b_read_reg);
+        // true if (m stage op writes to reg) && (x stage read from rt/rd) && (those regs match)
+    assign bp_mw_b = ctrl_writeEnable && dx_is_read_rt_rd && (ctrl_writeReg == dx_b_read_reg);
+        // true if (w stage is writing) && (x stage read from rt/rd) && (those regs match)
 
-    assign bp_xm_b = (xm_op_is_write_to_reg || dmo[21] || dmo[3]) && (dx_op_is_read_rd || dx_op_is_read_rt) && (xm_write_reg == dx_b_read_reg);
-    // true if (xm write to reg) && (dx b reads from reg) && (those regs match)
-    assign bp_mw_b = (mw_op_is_write_to_reg || dwo[21] || dwo[3]) && (dx_op_is_read_rd || dx_op_is_read_rt) && (mw_write_reg == dx_b_read_reg);
-    // true if (mw write to reg) && (dx b reads from reg) && (those regs match)
-
-
-    // Bypass logic for Mem stage (bypass from write stage)
-    assign bp_mw_dm = wren && 
+    // Bypass logic for Mem stage (from write stage to mem stage)
+    assign bp_mw_dm = ctrl_writeEnable && wren && (ctrl_writeReg == xm_ir_rd);
+        // true if (w stage is writing) && (memory is writing (op == sw)) && (w stage write reg == m stage rd reg)
 
 endmodule
