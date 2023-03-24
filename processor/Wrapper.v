@@ -35,7 +35,7 @@ module Wrapper (clock, reset);
 
 
 	// ADD YOUR MEMORY FILE HERE
-	localparam INSTR_FILE = "multdiv_slow_nbp";
+	localparam INSTR_FILE = "sort";
 	
 	// Main Processing Unit
 	processor CPU(.clock(clock), .reset(reset), 
