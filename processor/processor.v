@@ -68,28 +68,29 @@ module processor(
 
     wire [31:0] pc_in, pc_out, pc_inc_out;
     wire[31:0] pc_data; // PC corresponding data signal
-    wire pc_wren; // PC write enable
-    wire pc_write;
-    assign pc_write = 1'b1;
-	reg32 pc_reg(.data(pc_in), .out(pc_out), .write_enable(pc_write), .clk(clock), .clear(reset));
+    wire pc_branch_wren; // PC write enable
+    wire pc_reg_wren;
+    // assign pc_reg_wren = 1'b1;
+	reg32 pc_reg(.data(pc_in), .out(pc_out), .write_enable(pc_reg_wren), .clk(clock), .clear(reset));
 
     cla32bit pc_incrementer(.sum(pc_inc_out), .a(pc_out), .b({32{1'b0}}), .Cin(1'b1)); // add 1 to pc out
 
-    assign pc_in = pc_wren ? pc_data : pc_inc_out; // Write to pc reg depending on pc_wren
+    assign pc_in = pc_branch_wren ? pc_data : pc_inc_out; // Write to pc reg depending on pc_branch_wren
 
     // Get Instruction
     assign address_imem = pc_out;
 
     // F/D regs
     wire[31:0] fd_pc_out, fd_ir_in, fd_ir_out;
-    assign fd_ir_in = pc_wren ? {32'd0} : q_imem; // If branch occurs, nop flushed in
-    reg32 fd_pc_reg(.data(pc_inc_out), .out(fd_pc_out), .write_enable(1'b1), .clk(clock), .clear(reset));
-    reg32 fd_ir_reg(.data(fd_ir_in), .out(fd_ir_out), .write_enable(1'b1), .clk(clock), .clear(reset));
+    wire fd_wren;
+    assign fd_ir_in = pc_branch_wren ? {32'd0} : q_imem; // If branch occurs, nop flushed in
+    reg32 fd_pc_reg(.data(pc_inc_out), .out(fd_pc_out), .write_enable(fd_wren), .clk(clock), .clear(reset));
+    reg32 fd_ir_reg(.data(fd_ir_in), .out(fd_ir_out), .write_enable(fd_wren), .clk(clock), .clear(reset));
 
     // Decode
     wire [31:0] ddo; //decoded decode stage opcode
     decoder32 d_opcode_decoder(.select(fd_ir_out[31:27]), .out(ddo), .enable(1'b1));
-    assign ctrl_readRegA = fd_ir_out[21:17]; // Gets $rs from R-type inst.
+    assign ctrl_readRegA = fd_ir_out[21:17]; // Gets $rs from R/I-type inst.
     assign ctrl_readRegB = |{ddo[7], ddo[2], ddo[4], ddo[6]} ? fd_ir_out[26:22] : (ddo[22] ? 5'b11110 : fd_ir_out[16:12]); 
         // Gets $rt from R-type inst. (default)
         // Gets $rd from I/JII-type inst.
@@ -101,7 +102,8 @@ module processor(
 
     // D/X regs
     wire[31:0] dx_pc_out, dx_ir_in, dx_ir_out, dx_a_out, dx_b_out;
-    assign dx_ir_in = pc_wren ? {32'd0} : fd_ir_out; // If branch occurs, nop flushed in
+    wire dx_add_nop;
+    assign dx_ir_in = dx_add_nop ? {32'd0} : fd_ir_out; // If branch occurs, nop flushed in
     reg32 dx_pc_reg(.data(fd_pc_out), .out(dx_pc_out), .write_enable(1'b1), .clk(clock), .clear(reset));
     reg32 dx_ir_reg(.data(dx_ir_in), .out(dx_ir_out), .write_enable(1'b1), .clk(clock), .clear(reset));
     reg32 dx_a_reg(.data(data_readRegA), .out(dx_a_out), .write_enable(1'b1), .clk(clock), .clear(reset));
@@ -171,7 +173,7 @@ module processor(
     wire bex_condition = dxo[22] && ~|{bypassed_b}; // if bex opcode (10110) then dx_b_out will have $rstatus. True if $rstatus == 0
 
     wire pc_direct_assign = dxo[1] || dxo[3] || dxo[4]; // opcodes that directly assign pc (j, jal, jr)
-    assign pc_wren = pc_direct_assign || bne_condition || blt_condition || bex_condition;
+    assign pc_branch_wren = pc_direct_assign || bne_condition || blt_condition || bex_condition;
     assign pc_data = on_branch_pc;
 
     // X/M regs
@@ -248,7 +250,7 @@ module processor(
             // setx (10101) 
                 // Both jal and setx are JI-type instr but their dest reg is set in xm_ir[26:22]
 
-    wire dx_op_is_read_rs = dxo[0] || dxo[2] || dxo[5] || dxo[6] || dxo[7] || dxo[8];
+    wire dx_op_reads_rs = dxo[0] || dxo[2] || dxo[5] || dxo[6] || dxo[7] || dxo[8];
         // if opcode is one of following then it reads from $rs (ir[21:17])
             // alu_op (00000)
             // bne (00010)
@@ -257,41 +259,75 @@ module processor(
             // sw (00111)
             // lw (01000)
     wire [4:0] dx_ir_rs = dx_ir_out[21:17];
+    wire [4:0] dx_ir_rd = dx_ir_out[26:22];
     wire [4:0] xm_ir_rd = xm_ir_out[26:22];
 
     // Bypass logic for val a (bypass into execute stage)
-    assign bp_xm_a = dx_op_is_read_rs && xm_op_is_write_to_reg && (xm_ir_rd == dx_ir_rs);
+    assign bp_xm_a = dx_op_reads_rs && xm_op_is_write_to_reg && (xm_ir_rd == dx_ir_rs);
         // True if (x op reads rs) && (m op write rd) && (x stage rs reg == m stage rd reg)
 
-    assign bp_mw_a = dx_op_is_read_rs && ctrl_writeEnable && (ctrl_writeReg == dx_ir_rs);
-        // True if dx_op_is_read_rs && (w stage is writing) && (w stage reg == x stage rs reg)
+    assign bp_mw_a = dx_op_reads_rs && ctrl_writeEnable && (ctrl_writeReg == dx_ir_rs);
+        // True if dx_op_reads_rs && (w stage is writing) && (w stage reg == x stage rs reg)
 
     // Bypass logic for val b (bypass into execute stage)
-    wire dx_op_is_read_rt = dxo[0];
+    wire dx_op_reads_rt = dxo[0];
         // if opcode is alu_op (00000) then $rt is read from ir[16:12]
-    wire dx_op_is_read_rd = dxo[2] || dxo[4] || dxo[6] || dxo[7];
+    wire dx_op_reads_rd = dxo[2] || dxo[4] || dxo[6] || dxo[7];
         // Following opcodes read from $rd ir[26:22]
             // bne (00010)
             // jr (00100)
             // blt (00110)
             // sw (00111)
 
-    wire [4:0] dx_b_read_reg = dx_op_is_read_rt ? dx_ir_out[16:12] : (dx_op_is_read_rd ? dx_ir_out[26:22] : 5'bzzzzz);
+    wire [4:0] dx_b_read_reg = dx_op_reads_rt ? dx_ir_out[16:12] : (dx_op_reads_rd ? dx_ir_rd : 5'bzzzzz);
         // assign dx_b_read_reg (which reg dx stage is reading from for val b)
-        // if dx_op_is_read_rt
+        // if dx_op_reads_rt
             // = dx_ir_rt ir[16:12](for R type instr)
-        // else if dx_op_is_read_rd
+        // else if dx_op_reads_rd
             // = dx_ir_rd ir[26:22]
         // else
             // = zzzzz
-    wire dx_is_read_rt_rd = dx_op_is_read_rd || dx_op_is_read_rt;
-    assign bp_xm_b = xm_op_is_write_to_reg && dx_is_read_rt_rd && (xm_ir_rd == dx_b_read_reg);
+    wire dx_reads_rt_rd = dx_op_reads_rd || dx_op_reads_rt;
+    assign bp_xm_b = xm_op_is_write_to_reg && dx_reads_rt_rd && (xm_ir_rd == dx_b_read_reg);
         // true if (m stage op writes to reg) && (x stage read from rt/rd) && (those regs match)
-    assign bp_mw_b = ctrl_writeEnable && dx_is_read_rt_rd && (ctrl_writeReg == dx_b_read_reg);
+    assign bp_mw_b = ctrl_writeEnable && dx_reads_rt_rd && (ctrl_writeReg == dx_b_read_reg);
         // true if (w stage is writing) && (x stage read from rt/rd) && (those regs match)
 
     // Bypass logic for Mem stage (from write stage to mem stage)
     assign bp_mw_dm = ctrl_writeEnable && wren && (ctrl_writeReg == xm_ir_rd);
         // true if (w stage is writing) && (memory is writing (op == sw)) && (w stage write reg == m stage rd reg)
+
+
+    // Stall Logic for LW (Stall any instr that reads the lw rd reg)
+    wire fd_op_reads_rd = dxo[2] || dxo[4] || dxo[6];
+        // The following opcodes read from $rd fd_ir[26:22]
+            // bne (00010)
+            // jr (00100)
+            // blt (00110)
+            // sw (00111) (don't need this one because of w to m stage bypass)
+    wire fd_op_reads_rs = dxo[0] || dxo[2] || dxo[5] || dxo[6] || dxo[7] || dxo[8];
+        // if opcode is one of following then it reads from $rs (fd_ir[21:17])
+            // alu_op (00000)
+            // bne (00010)
+            // addi (00101)
+            // blt (00110)
+            // sw (00111)
+            // lw (01000)
+    wire fd_op_reads_rt = dxo[0];
+        // if opcode is alu_op (00000) then $rt is read from fd_ir[16:12]
+    wire fd_op_reads_status = dxo[22];
+        // if op == bex (10110) then will read $r30 ($rstatus)
+
+    wire stall = dxo[8] && (
+        (fd_op_reads_rd && (dx_ir_rd == fd_ir_out[26:22])) ||
+        (fd_op_reads_rs && (dx_ir_rd == fd_ir_out[21:17])) ||
+        (fd_op_reads_rt && (dx_ir_rd == fd_ir_out[16:12])) ||
+        (fd_op_reads_status && (dx_ir_rd == 5'b11110))
+    );
+        // stall if dx_ir_op == lw (01000) && 
+            // (fd op reads reg_xx) && (reg_xx == dx_ir_rd) (this but all cases)
+    assign pc_reg_wren = ~stall;
+    assign fd_wren = ~stall;
+    assign dx_add_nop = stall || pc_branch_wren;
 
 endmodule
