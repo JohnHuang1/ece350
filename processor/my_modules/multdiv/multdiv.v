@@ -2,13 +2,14 @@ module multdiv(
 	data_operandA, data_operandB, 
 	ctrl_MULT, ctrl_DIV, 
 	clock, 
-	data_result, data_exception, data_resultRDY);
+	data_result, data_exception, data_resultRDY,
+    module_running);
 
     input [31:0] data_operandA, data_operandB;
     input ctrl_MULT, ctrl_DIV, clock;
 
     output [31:0] data_result;
-    output data_exception, data_resultRDY;
+    output data_exception, data_resultRDY, module_running;
 
     // add your code here
 
@@ -35,10 +36,13 @@ module multdiv(
     // Latch mult/div signal
     wire op_start = ctrl_MULT || ctrl_DIV;
 
-    dffe_ref divLatch(.q(isDiv), .d(ctrl_DIV), .clk(clock), .en(op_start));
-    dffe_ref multLatch(.q(isMult), .d(ctrl_MULT), .clk(clock), .en(op_start));
+    dffe_ref divLatch(.q(isDiv), .d(ctrl_DIV), .clk(clock), .en(op_start), .clr(count == 6'b100001));
+    dffe_ref multLatch(.q(isMult), .d(ctrl_MULT), .clk(clock), .en(op_start), .clr(count == 6'b010001));
 
     dffe_ref dividend_sign_latch(.q(operand_A_is_negative), .d(data_operandA[31]), .clk(clock), .en(op_start));
+
+    // Running
+    tff toggle_running(.T(op_start || data_resultRDY), .clock(clock), .en(op_start || data_resultRDY), .clr(1'b0), .q(module_running));
 
     // M
     reg32 M_reg(.data(data_operandB), .clk(clock), .write_enable(op_start), .out(M));
@@ -98,9 +102,9 @@ module multdiv(
 
     // Counter
     
-    counter_mod32 counter(.clock(clock), .reset(op_start), .q(count), .enable(~data_resultRDY));
+    counter_mod32 counter(.clock(clock), .reset(op_start), .q(count), .enable(1'b1));
 
-    assign data_resultRDY = ~op_start && ((isMult && count[4]) || cla_overflow_return || (isDiv && (count[5] || M_is_zero)));
+    assign data_resultRDY = ~op_start && ((isMult && (count == 6'b010000)) || cla_overflow_return || (isDiv && ((count == 6'b100000) || ((count == 6'b000011) && M_is_zero))));
 
     assign M_is_zero = ~|M;
     // Overflow

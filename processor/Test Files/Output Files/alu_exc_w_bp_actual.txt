@@ -12,12 +12,14 @@ Cycle  27: Wrote 2 into register 30
 Cycle  30: Wrote 200 into register 20
 Cycle  31: Wrote 202 into register 20
 Cycle  34: Wrote 0 into register 4
+Cycle  50: Wrote 4 into register 30
 Cycle  53: Wrote 202 into register 21
 Cycle  54: Wrote 1616 into register 21
-Cycle  55: Wrote 1618 into register 21
+Cycle  55: Wrote 1620 into register 21
 Cycle  58: Wrote 0 into register 4
-Cycle  62: Wrote 12944 into register 21
-Cycle  63: Wrote 12946 into register 21
+Cycle  61: Wrote 5 into register 30
+Cycle  65: Wrote 12960 into register 21
+Cycle  66: Wrote 12965 into register 21
 ============== Testing Mode ==============
 Reg  0:           0
 Reg  1:           1
@@ -40,7 +42,7 @@ Reg 17:           0
 Reg 18:           0
 Reg 19:           0
 Reg 20:         202
-Reg 21:       12946
+Reg 21:       12965
 Reg 22:           0
 Reg 23:           0
 Reg 24:           0
@@ -49,5 +51,5 @@ Reg 26:           0
 Reg 27:           0
 Reg 28:           0
 Reg 29:           0
-Reg 30:           2
+Reg 30:           5
 Reg 31:           0

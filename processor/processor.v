@@ -216,9 +216,11 @@ module processor(
     assign wren = dmo[7]; // Data Memory write enable when opcode sw (00111)
 
     // M/W regs
-    wire[31:0] mw_ir_out, mw_o_out, mw_d_out;
-    reg32 mw_ir_reg(.data(xm_ir_out), .out(mw_ir_out), .write_enable(1'b1), .clk(clock), .clear(reset));
-    reg32 mw_o_reg(.data(xm_o_out), .out(mw_o_out), .write_enable(1'b1), .clk(clock), .clear(reset));
+    wire[31:0] mw_ir_in, mw_ir_out, mw_o_in, mw_o_out, mw_d_out;
+    assign mw_ir_in = p_data_rdy ? p_ir_final : xm_ir_out;
+    assign mw_o_in = p_data_rdy ? p_data : xm_o_out;
+    reg32 mw_ir_reg(.data(mw_ir_in), .out(mw_ir_out), .write_enable(1'b1), .clk(clock), .clear(reset));
+    reg32 mw_o_reg(.data(mw_o_in), .out(mw_o_out), .write_enable(1'b1), .clk(clock), .clear(reset));
     reg32 mw_d_reg(.data(q_dmem), .out(mw_d_out), .write_enable(1'b1), .clk(clock), .clear(reset));
 
     // Write
@@ -241,28 +243,28 @@ module processor(
 
     // Multdiv
     wire[31:0] multdiv_op_a, multdiv_op_b, multdiv_result;
-    wire ctrl_MULT, ctrl_DIV, clock, multdiv_ex, multdiv_resultRDY;
-    multdiv mult_div_module(.data_operandA(multdiv_op_a), .data_operandB(multdiv_op_b), .ctrl_MULT(ctrl_MULT), .ctrl_DIV(ctrl_DIV), .clock(clock), .data_result(multdiv_result), .data_exception(multdiv_ex), .data_resultRDY(multdiv_resultRDY));
+    wire ctrl_MULT, ctrl_DIV, clock, multdiv_ex, multdiv_resultRDY, multdiv_active;
+    multdiv mult_div_module(.data_operandA(multdiv_op_a), .data_operandB(multdiv_op_b), .ctrl_MULT(ctrl_MULT), .ctrl_DIV(ctrl_DIV), .clock(clock), .data_result(multdiv_result), .data_exception(multdiv_ex), .data_resultRDY(multdiv_resultRDY), .module_running(multdiv_active));
 
-    wire [31:0] pw_w_data, pw_p_out, pw_ir_out;
+    wire [31:0] p_data, p_ir_out, p_ir_final;
     wire pw_p_ex_out, pw_p_rdy_out;
-    wire multdiv_active;
-    reg32 pw_p_reg(.data(multdiv_result), .out(pw_p_out), .write_enable(multdiv_resultRDY), .clk(n_clock), .clear(reset));
-    reg32 pw_ir_reg(.data(dx_ir_out), .out(pw_ir_out), .write_enable(ctrl_MULT || ctrl_DIV || ~multdiv_active), .clk(n_clock), .clear(reset));
-    dffe_ref pw_p_ex_reg(.q(pw_p_ex_out), .d(multdiv_ex), .clk(n_clock), .en(multdiv_resultRDY), .clr(reset));
-    dffe_ref pw_p_rdy_reg(.q(pw_p_rdy_out), .d(multdiv_resultRDY), .clk(n_clock), .en(1'b1), .clr(reset));
+    // reg32 pw_p_reg(.data(multdiv_result), .out(pw_p_out), .write_enable(multdiv_resultRDY), .clk(clock), .clear(reset));
+    reg32 p_ir_reg(.data(dx_ir_out), .out(p_ir_out), .write_enable(ctrl_MULT || ctrl_DIV || ~multdiv_active), .clk(clock), .clear(reset));
+    // dffe_ref pw_p_ex_reg(.q(pw_p_ex_out), .d(multdiv_ex), .clk(clock), .en(multdiv_resultRDY), .clr(reset));
+    // dffe_ref pw_p_rdy_reg(.q(pw_p_rdy_out), .d(multdiv_resultRDY), .clk(clock), .en(1'b1), .clr(reset));
 
     assign multdiv_op_a = bypassed_a;
     assign multdiv_op_b = bypassed_b;
     assign ctrl_MULT = dxo[0] && dxao[6];
     assign ctrl_DIV = dxo[0] && dxao[7];
 
-    dffe_ref p_latch(.q(multdiv_active), .d(ctrl_MULT || ctrl_DIV), .clk(n_clock), .en(ctrl_MULT || ctrl_DIV), .clr(multdiv_resultRDY || reset));
+    // dffe_ref p_latch(.q(multdiv_active), .d(ctrl_MULT || ctrl_DIV), .clk(clock), .en(ctrl_MULT || ctrl_DIV), .clr(multdiv_resultRDY || reset));
 
-    wire[4:0] p_reg = multdiv_ex ? 5'b11110 : dx_ir_rd;
-    assign pw_w_data = multdiv_ex ? (pw_ir_out[6:2] == 5'b00111 ? 32'd5 : 32'd4) : multdiv_result;
+    wire[4:0] p_reg = multdiv_ex ? 5'b11110 : p_ir_out[26:22];
+    assign p_ir_final = {p_ir_out[31:27], p_reg, p_ir_out[21:0]};
+    assign p_data = multdiv_ex ? (p_ir_out[6:2] == 5'b00111 ? 32'd5 : 32'd4) : multdiv_result;
 
-    wire pw_ir_is_multdiv_and_rdy = pw_p_rdy_out && pw_ir_out[31:27] == 5'd0 && (pw_ir_out[6:2] == 5'b00110 || pw_ir_out[6:2] == 5'b00111);
+    wire p_data_rdy = multdiv_resultRDY && p_ir_out[31:27] == 5'd0 && (p_ir_out[6:2] == 5'b00110 || p_ir_out[6:2] == 5'b00111);
 
     // Bypass logic
     wire bp_xm_a, bp_mw_a, bp_xm_b, bp_mw_b, bp_mw_dm; // "bypass_(stage reg)_a/b/dm"
