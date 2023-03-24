@@ -123,7 +123,13 @@ module processor(
     wire [31:0] sx_immediate = {{15{dx_ir_out[16]}}, dx_ir_out[16:0]};
     assign alu_opA = bypassed_a;
     assign alu_opB = |{dxo[5], dxo[7], dxo[8]} ? sx_immediate : bypassed_b;
-    assign alu_opcode = dxo[0] ? dx_ir_out[6:2] : 5'b00000;
+    assign alu_opcode = dxo[0] ? dx_ir_out[6:2] : (dxo[2] || dxo[6] ? 5'b00001 : 5'b00000);
+        // if (x stage op == alu_op (00000))
+            // use alu_op
+        // else if (x stage op == bne (00010) or blt (00110))
+            // do sub (5'b00001)
+        // else 
+            // do add (5'b00000)
     assign alu_shamt = dx_ir_out[11:7];
 
     // On overflow
@@ -148,7 +154,7 @@ module processor(
     // Branch logic
     wire[31:0] on_branch_pc, pc_adder_out;
 
-    cla32bit pc_adder(.a(dx_pc_out), .b(sx_immediate), .sum(pc_adder_out));
+    cla32bit pc_adder(.a(dx_pc_out), .b(sx_immediate), .sum(pc_adder_out), .Cin(1'b0));
     wire opcode_is_branch_N = dxo[2] || dxo[6];
     assign on_branch_pc = opcode_is_branch_N ? pc_adder_out : {32{1'bz}};
         // Branch for bne (00010) and blt (00110)

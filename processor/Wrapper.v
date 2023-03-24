@@ -35,7 +35,7 @@ module Wrapper (clock, reset);
 
 
 	// ADD YOUR MEMORY FILE HERE
-	localparam INSTR_FILE = "test_store_load";
+	localparam INSTR_FILE = "blt";
 	
 	// Main Processing Unit
 	processor CPU(.clock(clock), .reset(reset), 
