@@ -262,12 +262,16 @@ module processor(
     wire [4:0] dx_ir_rd = dx_ir_out[26:22];
     wire [4:0] xm_ir_rd = xm_ir_out[26:22];
 
-    // Bypass logic for val a (bypass into execute stage)
-    assign bp_xm_a = dx_op_reads_rs && xm_op_is_write_to_reg && (xm_ir_rd == dx_ir_rs);
-        // True if (x op reads rs) && (m op write rd) && (x stage rs reg == m stage rd reg)
+    // Check that these regs aren't zero
+    wire w_reg_dest_nz = ctrl_writeReg != 5'd0;
+    wire xm_ir_rd_nz = xm_ir_rd != 5'd0;
 
-    assign bp_mw_a = dx_op_reads_rs && ctrl_writeEnable && (ctrl_writeReg == dx_ir_rs);
-        // True if dx_op_reads_rs && (w stage is writing) && (w stage reg == x stage rs reg)
+    // Bypass logic for val a (bypass into execute stage)
+    assign bp_xm_a = dx_op_reads_rs && xm_op_is_write_to_reg && (xm_ir_rd == dx_ir_rs) && xm_ir_rd_nz;
+        // True if (x op reads rs) && (m op write rd) && (x stage rs reg == m stage rd reg) && (xm_ir_rd != $r0)
+
+    assign bp_mw_a = dx_op_reads_rs && ctrl_writeEnable && (ctrl_writeReg == dx_ir_rs) && w_reg_dest_nz;
+        // True if dx_op_reads_rs && (w stage is writing) && (w stage reg == x stage rs reg) && (w stage reg != $r0)
 
     // Bypass logic for val b (bypass into execute stage)
     wire dx_op_reads_rt = dxo[0];
@@ -288,13 +292,13 @@ module processor(
         // else
             // = zzzzz
     wire dx_reads_rt_rd = dx_op_reads_rd || dx_op_reads_rt;
-    assign bp_xm_b = xm_op_is_write_to_reg && dx_reads_rt_rd && (xm_ir_rd == dx_b_read_reg);
-        // true if (m stage op writes to reg) && (x stage read from rt/rd) && (those regs match)
-    assign bp_mw_b = ctrl_writeEnable && dx_reads_rt_rd && (ctrl_writeReg == dx_b_read_reg);
-        // true if (w stage is writing) && (x stage read from rt/rd) && (those regs match)
+    assign bp_xm_b = xm_op_is_write_to_reg && dx_reads_rt_rd && (xm_ir_rd == dx_b_read_reg) && xm_ir_rd_nz;
+        // true if (m stage op writes to reg) && (x stage read from rt/rd) && (those regs match) && (xm_ir_rd != $r0)
+    assign bp_mw_b = ctrl_writeEnable && dx_reads_rt_rd && (ctrl_writeReg == dx_b_read_reg) && w_reg_dest_nz;
+        // true if (w stage is writing) && (x stage read from rt/rd) && (those regs match) && (w stage reg != $r0)
 
     // Bypass logic for Mem stage (from write stage to mem stage)
-    assign bp_mw_dm = ctrl_writeEnable && wren && (ctrl_writeReg == xm_ir_rd);
+    assign bp_mw_dm = ctrl_writeEnable && wren && (ctrl_writeReg == xm_ir_rd) && w_reg_dest_nz;
         // true if (w stage is writing) && (memory is writing (op == sw)) && (w stage write reg == m stage rd reg)
 
 
