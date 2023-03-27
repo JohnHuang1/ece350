@@ -24,8 +24,12 @@
  *
  **/
 
-module Wrapper (clock, reset);
-	input clock, reset;
+module Wrapper (input CLK10MHZ, reset, input [15:0] SW,
+    output [15:0] LED
+    );
+    
+    assign LED = SW;
+    wire clock = CLK10MHZ;
 
 	wire rwe, mwe;
 	wire[4:0] rd, rs1, rs2;
@@ -35,7 +39,7 @@ module Wrapper (clock, reset);
 
 
 	// ADD YOUR MEMORY FILE HERE
-	localparam INSTR_FILE = "sort";
+	localparam INSTR_FILE = "C:/Users/johnj/dev/ece350/processor/Test Files/Memory Files/sort";
 	
 	// Main Processing Unit
 	processor CPU(.clock(clock), .reset(reset), 

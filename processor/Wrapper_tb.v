@@ -36,7 +36,7 @@
 module Wrapper_tb #(parameter FILE = "nop");
 
 	// FileData
-	localparam DIR = "Test Files/";
+	localparam DIR = "C:/Users/johnj/dev/ece350/processor/Test Files/";
 	localparam MEM_DIR = "Memory Files/";
 	localparam OUT_DIR = "Output Files/";
 	localparam VERIF_DIR = "Verification Files/";
