@@ -2,8 +2,8 @@
 # Vivado v2020.1 (64-bit)
 # SW Build 2902540 on Wed May 27 19:54:49 MDT 2020
 # IP Build 2902112 on Wed May 27 22:43:36 MDT 2020
-# Start of session at: Mon Mar 27 18:44:25 2023
-# Process ID: 18912
+# Start of session at: Mon Mar 27 23:31:55 2023
+# Process ID: 17568
 # Current directory: C:/Users/johnj/dev/ece350/FatMan/FatMan.runs/synth_1
 # Command line: vivado.exe -log Wrapper.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source Wrapper.tcl
 # Log file: C:/Users/johnj/dev/ece350/FatMan/FatMan.runs/synth_1/Wrapper.vds

@@ -24,22 +24,44 @@
  *
  **/
 
-module Wrapper (input CLK10MHZ, reset, input [15:0] SW,
+module Wrapper (input CLK10MHZ, input CPU_RESETN, input [15:0] SW,
     output [15:0] LED
     );
     
-    assign LED = SW;
+	wire reset = ~CPU_RESETN;
     wire clock = CLK10MHZ;
+	wire [31:0] reg1_out, num1, num2;
+	assign num1 = {{24{1'b0}}, SW[7:0]};
+	assign num2 = {{24{1'b0}}, SW[15:8]};
+	assign LED = reg1_out[15:0];
 
 	wire rwe, mwe;
 	wire[4:0] rd, rs1, rs2;
 	wire[31:0] instAddr, instData, 
 		rData, regA, regB,
 		memAddr, memDataIn, memDataOut;
+		
+    ila_0 debugger(.clk(CLK10MHZ), 
+		.probe0(instAddr),
+		.probe1(instData),
+		.probe2(rData),
+		.probe3(regA),
+		.probe4(regB),
+		.probe5(rd),
+		.probe6(rs1),
+		.probe7(rs2),
+		.probe8(mwe),
+		.probe9(reset),
+		.probe10(rwe));
 
 
 	// ADD YOUR MEMORY FILE HERE
-	localparam INSTR_FILE = "C:/Users/johnj/dev/ece350/processor/Test Files/Memory Files/sort";
+	// localparam INSTR_FILE = "Test Files/Memory Files/rep_add";
+	localparam FILE = "rep_add";
+	localparam DIR = "C:/Users/johnj/dev/ece350/processor/Test Files/";
+	localparam MEM_DIR = "Memory Files/";
+	localparam OUT_DIR = "Output Files/";
+	localparam VERIF_DIR = "Verification Files/";
 	
 	// Main Processing Unit
 	processor CPU(.clock(clock), .reset(reset), 
@@ -57,7 +79,7 @@ module Wrapper (input CLK10MHZ, reset, input [15:0] SW,
 		.data(memDataIn), .q_dmem(memDataOut)); 
 	
 	// Instruction Memory (ROM)
-	ROM #(.MEMFILE({INSTR_FILE, ".mem"}))
+	ROM #(.MEMFILE({DIR, MEM_DIR, FILE, ".mem"}))
 	InstMem(.clk(clock), 
 		.addr(instAddr[11:0]), 
 		.dataOut(instData));
@@ -67,7 +89,13 @@ module Wrapper (input CLK10MHZ, reset, input [15:0] SW,
 		.ctrl_writeEnable(rwe), .ctrl_reset(reset), 
 		.ctrl_writeReg(rd),
 		.ctrl_readRegA(rs1), .ctrl_readRegB(rs2), 
-		.data_writeReg(rData), .data_readRegA(regA), .data_readRegB(regB));
+		.data_writeReg(rData), .data_readRegA(regA), .data_readRegB(regB),
+		// Direct I/O input
+		.num1(num1), .num2(num2),
+
+		//Direct I/O output,
+		.out1(reg1_out)
+		);
 						
 	// Processor Memory (RAM)
 	RAM ProcMem(.clk(clock), 

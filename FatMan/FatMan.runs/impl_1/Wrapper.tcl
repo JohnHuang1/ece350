@@ -114,8 +114,6 @@ proc step_failed { step } {
   close $ch
 }
 
-set_msg_config -id {HDL 9-1061} -limit 100000
-set_msg_config -id {HDL 9-1654} -limit 100000
 
 OPTRACE "Implementation" START { ROLLUP_1 }
 OPTRACE "Phase: Write Bitstream" START { ROLLUP_AUTO }
@@ -124,12 +122,15 @@ start_step write_bitstream
 set ACTIVE_STEP write_bitstream
 set rc [catch {
   create_msg_db write_bitstream.pb
+  set_param tcl.collectionResultDisplayLimit 0
   set_param chipscope.maxJobs 5
+  set_param xicom.use_bs_reader 1
   open_checkpoint Wrapper_routed.dcp
   set_property webtalk.parent_dir C:/Users/johnj/dev/ece350/FatMan/FatMan.cache/wt [current_project]
 set_property TOP Wrapper [current_fileset]
 OPTRACE "read constraints: write_bitstream" START { }
 OPTRACE "read constraints: write_bitstream" END { }
+  set_property XPM_LIBRARIES {XPM_CDC XPM_MEMORY} [current_project]
   catch { write_mem_info -force Wrapper.mmi }
 OPTRACE "write_bitstream setup" END { }
 OPTRACE "write_bitstream" START { }

@@ -33,7 +33,7 @@
  *
  **/
 
-module Wrapper_tb #(parameter FILE = "nop");
+module Wrapper_tb #(parameter FILE = "sort");
 
 	// FileData
 	localparam DIR = "C:/Users/johnj/dev/ece350/processor/Test Files/";

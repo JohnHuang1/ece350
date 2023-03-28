@@ -70,24 +70,29 @@ proc create_report { reportName command } {
   }
 }
 OPTRACE "synth_1" START { ROLLUP_AUTO }
+set_param tcl.collectionResultDisplayLimit 0
 set_param chipscope.maxJobs 5
-set_msg_config -id {HDL 9-1061} -limit 100000
-set_msg_config -id {HDL 9-1654} -limit 100000
+set_param xicom.use_bs_reader 1
 OPTRACE "Creating in-memory project" START { }
 create_project -in_memory -part xc7a100tcsg324-1
 
 set_param project.singleFileAddWarning.threshold 0
 set_param project.compositeFile.enableAutoGeneration 0
 set_param synth.vivado.isSynthRun true
+set_msg_config -source 4 -id {IP_Flow 19-2162} -severity warning -new_severity info
 set_property webtalk.parent_dir C:/Users/johnj/dev/ece350/FatMan/FatMan.cache/wt [current_project]
 set_property parent.project_path C:/Users/johnj/dev/ece350/FatMan/FatMan.xpr [current_project]
+set_property XPM_LIBRARIES {XPM_CDC XPM_MEMORY} [current_project]
 set_property default_lib xil_defaultlib [current_project]
 set_property target_language Verilog [current_project]
 set_property ip_output_repo c:/Users/johnj/dev/ece350/FatMan/FatMan.cache/ip [current_project]
 set_property ip_cache_permissions {read write} [current_project]
 OPTRACE "Creating in-memory project" END { }
 OPTRACE "Adding files" START { }
-read_mem {{C:/Users/johnj/dev/ece350/processor/Test Files/Memory Files/sort.mem}}
+read_mem {
+  {C:/Users/johnj/dev/ece350/processor/Test Files/Memory Files/sort.mem}
+  {C:/Users/johnj/dev/ece350/processor/Test Files/Memory Files/rep_add.mem}
+}
 read_verilog -library xil_defaultlib {
   C:/Users/johnj/dev/ece350/processor/RAM.v
   C:/Users/johnj/dev/ece350/processor/ROM.v
@@ -117,6 +122,12 @@ read_verilog -library xil_defaultlib {
   C:/Users/johnj/dev/ece350/processor/my_modules/multdiv/t_flip-flop/tff.v
   C:/Users/johnj/dev/ece350/processor/Wrapper.v
 }
+read_ip -quiet C:/Users/johnj/dev/ece350/FatMan/FatMan.srcs/sources_1/ip/ila_0/ila_0.xci
+set_property used_in_synthesis false [get_files -all c:/Users/johnj/dev/ece350/FatMan/FatMan.srcs/sources_1/ip/ila_0/ila_v6_2/constraints/ila_impl.xdc]
+set_property used_in_implementation false [get_files -all c:/Users/johnj/dev/ece350/FatMan/FatMan.srcs/sources_1/ip/ila_0/ila_v6_2/constraints/ila_impl.xdc]
+set_property used_in_implementation false [get_files -all c:/Users/johnj/dev/ece350/FatMan/FatMan.srcs/sources_1/ip/ila_0/ila_v6_2/constraints/ila.xdc]
+set_property used_in_implementation false [get_files -all c:/Users/johnj/dev/ece350/FatMan/FatMan.srcs/sources_1/ip/ila_0/ila_0_ooc.xdc]
+
 OPTRACE "Adding files" END { }
 # Mark all dcp files as not used in implementation to prevent them from being
 # stitched into the results of this synthesis run. Any black boxes in the
@@ -129,6 +140,8 @@ foreach dcp [get_files -quiet -all -filter file_type=="Design\ Checkpoint"] {
 read_xdc C:/Users/johnj/dev/ece350/processor/master.xdc
 set_property used_in_implementation false [get_files C:/Users/johnj/dev/ece350/processor/master.xdc]
 
+read_xdc dont_touch.xdc
+set_property used_in_implementation false [get_files dont_touch.xdc]
 set_param ips.enableIPCacheLiteLoad 1
 close [open __synthesis_is_running__ w]
 
