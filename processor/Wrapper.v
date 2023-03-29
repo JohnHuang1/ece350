@@ -33,7 +33,6 @@ module Wrapper (input CLK10MHZ, input CPU_RESETN, input [15:0] SW,
 	wire [31:0] reg1_out, num1, num2;
 	assign num1 = {{24{1'b0}}, SW[7:0]};
 	assign num2 = {{24{1'b0}}, SW[15:8]};
-	assign LED = reg1_out[15:0];
 
 	wire rwe, mwe;
 	wire[4:0] rd, rs1, rs2;
@@ -57,7 +56,7 @@ module Wrapper (input CLK10MHZ, input CPU_RESETN, input [15:0] SW,
 
 	// ADD YOUR MEMORY FILE HERE
 	// localparam INSTR_FILE = "Test Files/Memory Files/rep_add";
-	localparam FILE = "rep_add";
+	localparam FILE = "mem_addr_add";
 	localparam DIR = "C:/Users/johnj/dev/ece350/processor/Test Files/";
 	localparam MEM_DIR = "Memory Files/";
 	localparam OUT_DIR = "Output Files/";
@@ -89,12 +88,12 @@ module Wrapper (input CLK10MHZ, input CPU_RESETN, input [15:0] SW,
 		.ctrl_writeEnable(rwe), .ctrl_reset(reset), 
 		.ctrl_writeReg(rd),
 		.ctrl_readRegA(rs1), .ctrl_readRegB(rs2), 
-		.data_writeReg(rData), .data_readRegA(regA), .data_readRegB(regB),
-		// Direct I/O input
-		.num1(num1), .num2(num2),
+		.data_writeReg(rData), .data_readRegA(regA), .data_readRegB(regB)
+		// // Direct I/O input
+		// .num1(num1), .num2(num2),
 
-		//Direct I/O output,
-		.out1(reg1_out)
+		// //Direct I/O output,
+		// .out1(reg1_out)
 		);
 						
 	// Processor Memory (RAM)
@@ -102,6 +101,12 @@ module Wrapper (input CLK10MHZ, input CPU_RESETN, input [15:0] SW,
 		.wEn(mwe), 
 		.addr(memAddr[11:0]), 
 		.dataIn(memDataIn), 
-		.dataOut(memDataOut));
+		.dataOut(memDataOut), 
+
+		// Direct I/O input
+		.num1(num1), .num2(num2), 
+		
+		// Direct I/O output
+		.LED(LED));
 
 endmodule
