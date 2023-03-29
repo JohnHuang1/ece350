@@ -30,9 +30,10 @@ module Wrapper (input CLK10MHZ, input CPU_RESETN, input [15:0] SW,
     
 	wire reset = ~CPU_RESETN;
     wire clock = CLK10MHZ;
-	wire [31:0] reg1_out, num1, num2;
+	wire [31:0] mem54_out, num1, num2;
 	assign num1 = {{24{1'b0}}, SW[7:0]};
 	assign num2 = {{24{1'b0}}, SW[15:8]};
+	assign LED = mem54_out[15:0];
 
 	wire rwe, mwe;
 	wire[4:0] rd, rs1, rs2;
@@ -51,7 +52,9 @@ module Wrapper (input CLK10MHZ, input CPU_RESETN, input [15:0] SW,
 		.probe7(rs2),
 		.probe8(mwe),
 		.probe9(reset),
-		.probe10(rwe));
+		.probe10(rwe),
+		.probe11(num1),
+		.probe12(num2));
 
 
 	// ADD YOUR MEMORY FILE HERE
@@ -107,6 +110,6 @@ module Wrapper (input CLK10MHZ, input CPU_RESETN, input [15:0] SW,
 		.num1(num1), .num2(num2), 
 		
 		// Direct I/O output
-		.LED(LED));
+		.mem54_out(mem54_out));
 
 endmodule

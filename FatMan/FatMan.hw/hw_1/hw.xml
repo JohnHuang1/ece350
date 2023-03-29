@@ -171,6 +171,58 @@
     </probe>
     <probe type="ila" busType="net" source="netlist" spec="ILA_V2_RT">
       <probeOptions Id="DebugProbeParams">
+        <Option Id="CAPTURE_COMPARE_VALUE" value="eq32&apos;hXXXX_XXXX"/>
+        <Option Id="COMPARE_VALUE.0" value="eq32&apos;hXXXX_XXXX"/>
+        <Option Id="DISPLAY_AS_ENUM" value="1"/>
+        <Option Id="DISPLAY_HINT" value=""/>
+        <Option Id="DISPLAY_RADIX" value="HEX"/>
+        <Option Id="DISPLAY_VISIBILITY" value=""/>
+        <Option Id="HW_ILA" value="debugger"/>
+        <Option Id="LINK_TO_WAVEFORM" value="1"/>
+        <Option Id="MAP" value="probe1[31:0]"/>
+        <Option Id="NAME.CUSTOM" value=""/>
+        <Option Id="NAME.SELECT" value="Long"/>
+        <Option Id="SOURCE" value="netlist"/>
+        <Option Id="TRIGGER_COMPARE_VALUE" value="eq32&apos;hXXXX_XXXX"/>
+        <Option Id="WAVEFORM_STYLE" value="Digital"/>
+      </probeOptions>
+      <nets>
+        <net name="mem54_out[31]"/>
+        <net name="mem54_out[30]"/>
+        <net name="mem54_out[29]"/>
+        <net name="mem54_out[28]"/>
+        <net name="mem54_out[27]"/>
+        <net name="mem54_out[26]"/>
+        <net name="mem54_out[25]"/>
+        <net name="mem54_out[24]"/>
+        <net name="mem54_out[23]"/>
+        <net name="mem54_out[22]"/>
+        <net name="mem54_out[21]"/>
+        <net name="mem54_out[20]"/>
+        <net name="mem54_out[19]"/>
+        <net name="mem54_out[18]"/>
+        <net name="mem54_out[17]"/>
+        <net name="mem54_out[16]"/>
+        <net name="mem54_out[15]"/>
+        <net name="mem54_out[14]"/>
+        <net name="mem54_out[13]"/>
+        <net name="mem54_out[12]"/>
+        <net name="mem54_out[11]"/>
+        <net name="mem54_out[10]"/>
+        <net name="mem54_out[9]"/>
+        <net name="mem54_out[8]"/>
+        <net name="mem54_out[7]"/>
+        <net name="mem54_out[6]"/>
+        <net name="mem54_out[5]"/>
+        <net name="mem54_out[4]"/>
+        <net name="mem54_out[3]"/>
+        <net name="mem54_out[2]"/>
+        <net name="mem54_out[1]"/>
+        <net name="mem54_out[0]"/>
+      </nets>
+    </probe>
+    <probe type="ila" busType="net" source="netlist" spec="ILA_V2_RT">
+      <probeOptions Id="DebugProbeParams">
         <Option Id="CAPTURE_COMPARE_VALUE" value="eq1&apos;bX"/>
         <Option Id="COMPARE_VALUE.0" value="eq1&apos;bX"/>
         <Option Id="DISPLAY_AS_ENUM" value="1"/>
@@ -188,6 +240,110 @@
       </probeOptions>
       <nets>
         <net name="mwe"/>
+      </nets>
+    </probe>
+    <probe type="ila" busType="bus" source="netlist" spec="ILA_V2_RT">
+      <probeOptions Id="DebugProbeParams">
+        <Option Id="CAPTURE_COMPARE_VALUE" value="eq32&apos;hXXXX_XXXX"/>
+        <Option Id="COMPARE_VALUE.0" value="eq32&apos;hXXXX_XXXX"/>
+        <Option Id="DISPLAY_AS_ENUM" value="1"/>
+        <Option Id="DISPLAY_HINT" value=""/>
+        <Option Id="DISPLAY_RADIX" value="HEX"/>
+        <Option Id="DISPLAY_VISIBILITY" value=""/>
+        <Option Id="HW_ILA" value="hw_ila_1"/>
+        <Option Id="LINK_TO_WAVEFORM" value="1"/>
+        <Option Id="MAP" value="probe11[31:0]"/>
+        <Option Id="NAME.CUSTOM" value=""/>
+        <Option Id="NAME.SELECT" value="Long"/>
+        <Option Id="SOURCE" value="netlist"/>
+        <Option Id="TRIGGER_COMPARE_VALUE" value="eq32&apos;hXXXX_XXXX"/>
+        <Option Id="WAVEFORM_STYLE" value="Digital"/>
+      </probeOptions>
+      <nets>
+        <net name="num1[31]"/>
+        <net name="num1[30]"/>
+        <net name="num1[29]"/>
+        <net name="num1[28]"/>
+        <net name="num1[27]"/>
+        <net name="num1[26]"/>
+        <net name="num1[25]"/>
+        <net name="num1[24]"/>
+        <net name="num1[23]"/>
+        <net name="num1[22]"/>
+        <net name="num1[21]"/>
+        <net name="num1[20]"/>
+        <net name="num1[19]"/>
+        <net name="num1[18]"/>
+        <net name="num1[17]"/>
+        <net name="num1[16]"/>
+        <net name="num1[15]"/>
+        <net name="num1[14]"/>
+        <net name="num1[13]"/>
+        <net name="num1[12]"/>
+        <net name="num1[11]"/>
+        <net name="num1[10]"/>
+        <net name="num1[9]"/>
+        <net name="num1[8]"/>
+        <net name="num1[7]"/>
+        <net name="num1[6]"/>
+        <net name="num1[5]"/>
+        <net name="num1[4]"/>
+        <net name="num1[3]"/>
+        <net name="num1[2]"/>
+        <net name="num1[1]"/>
+        <net name="num1[0]"/>
+      </nets>
+    </probe>
+    <probe type="ila" busType="bus" source="netlist" spec="ILA_V2_RT">
+      <probeOptions Id="DebugProbeParams">
+        <Option Id="CAPTURE_COMPARE_VALUE" value="eq32&apos;hXXXX_XXXX"/>
+        <Option Id="COMPARE_VALUE.0" value="eq32&apos;hXXXX_XXXX"/>
+        <Option Id="DISPLAY_AS_ENUM" value="1"/>
+        <Option Id="DISPLAY_HINT" value=""/>
+        <Option Id="DISPLAY_RADIX" value="HEX"/>
+        <Option Id="DISPLAY_VISIBILITY" value=""/>
+        <Option Id="HW_ILA" value="hw_ila_1"/>
+        <Option Id="LINK_TO_WAVEFORM" value="1"/>
+        <Option Id="MAP" value="probe12[31:0]"/>
+        <Option Id="NAME.CUSTOM" value=""/>
+        <Option Id="NAME.SELECT" value="Long"/>
+        <Option Id="SOURCE" value="netlist"/>
+        <Option Id="TRIGGER_COMPARE_VALUE" value="eq32&apos;hXXXX_XXXX"/>
+        <Option Id="WAVEFORM_STYLE" value="Digital"/>
+      </probeOptions>
+      <nets>
+        <net name="num2[31]"/>
+        <net name="num2[30]"/>
+        <net name="num2[29]"/>
+        <net name="num2[28]"/>
+        <net name="num2[27]"/>
+        <net name="num2[26]"/>
+        <net name="num2[25]"/>
+        <net name="num2[24]"/>
+        <net name="num2[23]"/>
+        <net name="num2[22]"/>
+        <net name="num2[21]"/>
+        <net name="num2[20]"/>
+        <net name="num2[19]"/>
+        <net name="num2[18]"/>
+        <net name="num2[17]"/>
+        <net name="num2[16]"/>
+        <net name="num2[15]"/>
+        <net name="num2[14]"/>
+        <net name="num2[13]"/>
+        <net name="num2[12]"/>
+        <net name="num2[11]"/>
+        <net name="num2[10]"/>
+        <net name="num2[9]"/>
+        <net name="num2[8]"/>
+        <net name="num2[7]"/>
+        <net name="num2[6]"/>
+        <net name="num2[5]"/>
+        <net name="num2[4]"/>
+        <net name="num2[3]"/>
+        <net name="num2[2]"/>
+        <net name="num2[1]"/>
+        <net name="num2[0]"/>
       </nets>
     </probe>
     <probe type="ila" busType="bus" source="netlist" spec="ILA_V2_RT">

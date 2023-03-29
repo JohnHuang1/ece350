@@ -10,14 +10,16 @@
    </db_ref_list>
    <zoom_setting>
       <ZoomStartTime time="0fs"></ZoomStartTime>
-      <ZoomEndTime time="9fs"></ZoomEndTime>
-      <Cursor1Time time="15fs"></Cursor1Time>
+      <ZoomEndTime time="65fs"></ZoomEndTime>
+      <Cursor1Time time="28fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="232"></NameColumnWidth>
-      <ValueColumnWidth column_width="113"></ValueColumnWidth>
+      <ValueColumnWidth column_width="109"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="2" />
+   <wave_markers>
+   </wave_markers>
    <wvobject fp_name="instAddr" type="array">
       <obj_property name="DisplayName">FullPathName</obj_property>
       <obj_property name="ElementShortName">instAddr[31:0]</obj_property>

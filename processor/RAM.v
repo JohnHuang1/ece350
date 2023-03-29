@@ -4,14 +4,14 @@
 //  1201 = sw[15:8]
 // OUTPUT
 //  1204[15:0] = LED
-module RAM #( parameter DATA_WIDTH = 32, ADDRESS_WIDTH = 12, DEPTH = 4096) (
+module RAM #( parameter DATA_WIDTH = 32, ADDRESS_WIDTH = 12, DEPTH = 256) (
     input wire                     clk,
     input wire                     wEn,
     input wire [ADDRESS_WIDTH-1:0] addr,
     input wire [DATA_WIDTH-1:0]    dataIn,
     output reg [DATA_WIDTH-1:0]    dataOut = 0, 
     input [31:0] num1, num2,
-    output [15:0] LED);
+    output [31:0] mem54_out);
     
     reg[DATA_WIDTH-1:0] MemoryArray[0:DEPTH-1];
     
@@ -30,12 +30,12 @@ module RAM #( parameter DATA_WIDTH = 32, ADDRESS_WIDTH = 12, DEPTH = 4096) (
             MemoryArray[addr] <= dataIn;
         end else begin
             case (addr)
-                12'd1200: dataOut <= num1;
-                12'd1201: dataOut <= num2;
+                12'd50: dataOut <= num1;
+                12'd51: dataOut <= num2;
                 default: dataOut <= MemoryArray[addr];
             endcase
         end
     end
 
-    assign LED = MemoryArray[12'd1204][15:0];
+    assign mem54_out = MemoryArray[12'd54];
 endmodule
