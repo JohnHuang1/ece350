@@ -227,6 +227,13 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
+      <File Path="$PPRDIR/../processor/my_modules/pwm/pwm_generator.v">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
       <File Path="$PPRDIR/../processor/my_modules/regfile/reg32.v">
         <FileInfo>
           <Attr Name="UsedIn" Val="synthesis"/>

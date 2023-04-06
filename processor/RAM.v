@@ -10,10 +10,10 @@ module RAM #( parameter DATA_WIDTH = 32, ADDRESS_WIDTH = 12, DEPTH = 4096) (
     input wire [ADDRESS_WIDTH-1:0] addr,
     input wire [DATA_WIDTH-1:0]    dataIn,
     output reg [DATA_WIDTH-1:0]    dataOut = 0, 
-    input [31:0] num1, num2,
-    output [31:0] mem54_out);
+    output wire [31:0] pwm0, pwm1, pwm2, pwm3);
     
     reg[DATA_WIDTH-1:0] MemoryArray[0:DEPTH-1];
+    reg[DATA_WIDTH-1:0] PWMRegArray[0:3];
     
     integer i;
     initial begin
@@ -27,15 +27,26 @@ module RAM #( parameter DATA_WIDTH = 32, ADDRESS_WIDTH = 12, DEPTH = 4096) (
     
     always @(negedge clk) begin
         if(wEn) begin
-            MemoryArray[addr] <= dataIn;
+            case (addr)
+                12'd1000: PWMRegArray[0] <= dataIn;
+                12'd1001: PWMRegArray[1] <= dataIn;
+                12'd1002: PWMRegArray[2] <= dataIn;
+                12'd1003: PWMRegArray[3] <= dataIn;
+                default: MemoryArray[addr] <= dataIn;
+            endcase
         end else begin
             case (addr)
-                12'd50: dataOut <= num1;
-                12'd51: dataOut <= num2;
+                12'd1000: dataOut <= PWMRegArray[0];
+                12'd1001: dataOut <= PWMRegArray[1];
+                12'd1002: dataOut <= PWMRegArray[2];
+                12'd1003: dataOut <= PWMRegArray[3];
                 default: dataOut <= MemoryArray[addr];
             endcase
         end
     end
 
-    assign mem54_out = MemoryArray[12'd54];
+    assign pwm0 = PWMRegArray[0];
+    assign pwm1 = PWMRegArray[1];
+    assign pwm2 = PWMRegArray[2];
+    assign pwm3 = PWMRegArray[3];
 endmodule

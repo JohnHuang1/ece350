@@ -113,6 +113,7 @@ read_verilog -library xil_defaultlib {
   C:/Users/johnj/dev/ece350/processor/my_modules/multdiv/negate_32.v
   C:/Users/johnj/dev/ece350/processor/my_modules/alu/not_32.v
   C:/Users/johnj/dev/ece350/processor/processor.v
+  C:/Users/johnj/dev/ece350/processor/my_modules/pwm/pwm_generator.v
   C:/Users/johnj/dev/ece350/processor/my_modules/regfile/reg32.v
   C:/Users/johnj/dev/ece350/processor/my_modules/multdiv/reg65.v
   C:/Users/johnj/dev/ece350/processor/my_modules/regfile/regfile.v

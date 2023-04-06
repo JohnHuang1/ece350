@@ -1,0 +1,96 @@
+#! /c/Source/iverilog-install/bin/vvp
+:ivl_version "12.0 (devel)" "(s20150603-1539-g2693dd32b)";
+:ivl_delay_selection "TYPICAL";
+:vpi_time_precision - 10;
+:vpi_module "C:\PROGRA~1\iverilog\lib\ivl\system.vpi";
+:vpi_module "C:\PROGRA~1\iverilog\lib\ivl\vhdl_sys.vpi";
+:vpi_module "C:\PROGRA~1\iverilog\lib\ivl\vhdl_textio.vpi";
+:vpi_module "C:\PROGRA~1\iverilog\lib\ivl\v2005_math.vpi";
+:vpi_module "C:\PROGRA~1\iverilog\lib\ivl\va_math.vpi";
+S_00000215bdae6680 .scope module, "pwm_tb" "pwm_tb" 2 2;
+ .timescale -9 -10;
+v00000215bdae4710_0 .var "clk", 0 0;
+v00000215bdae47b0_0 .var/i "cycle_count", 31 0;
+v00000215bdae4850_0 .var "duty_cycle", 7 0;
+v00000215bdb2c700_0 .net "pwm_out", 0 0, L_00000215bdb2bee0;  1 drivers
+E_00000215bdad5c70 .event posedge, v00000215bdae4670_0;
+S_00000215bdae6810 .scope module, "pwm_gen" "pwm_generator" 2 7, 3 1 0, S_00000215bdae6680;
+ .timescale 0 0;
+    .port_info 0 /INPUT 1 "clk";
+    .port_info 1 /INPUT 1 "en";
+    .port_info 2 /INPUT 8 "duty_cycle";
+    .port_info 3 /OUTPUT 1 "pwm_out";
+P_00000215bdad57b0 .param/l "pwm_bit_width" 0 3 1, +C4<00000000000000000000000000001000>;
+v00000215bda9b580_0 .net *"_ivl_0", 0 0, L_00000215bdb2bda0;  1 drivers
+L_00000215bdb2c868 .functor BUFT 1, C4<1>, C4<0>, C4<0>, C4<0>;
+v00000215bdab30e0_0 .net/2u *"_ivl_2", 0 0, L_00000215bdb2c868;  1 drivers
+L_00000215bdb2c8b0 .functor BUFT 1, C4<0>, C4<0>, C4<0>, C4<0>;
+v00000215bdad82b0_0 .net/2u *"_ivl_4", 0 0, L_00000215bdb2c8b0;  1 drivers
+v00000215bdad8350_0 .net "clk", 0 0, v00000215bdae4710_0;  1 drivers
+v00000215bdae69a0_0 .net "duty_cycle", 7 0, v00000215bdae4850_0;  1 drivers
+L_00000215bdb2c8f8 .functor BUFT 1, C4<1>, C4<0>, C4<0>, C4<0>;
+v00000215bdae6a40_0 .net "en", 0 0, L_00000215bdb2c8f8;  1 drivers
+v00000215bdae45d0_0 .var "pwm_counter", 7 0;
+v00000215bdae4670_0 .net "pwm_out", 0 0, L_00000215bdb2bee0;  alias, 1 drivers
+E_00000215bdad5370 .event posedge, v00000215bdad8350_0;
+L_00000215bdb2bda0 .cmp/gt 8, v00000215bdae4850_0, v00000215bdae45d0_0;
+L_00000215bdb2bee0 .functor MUXZ 1, L_00000215bdb2c8b0, L_00000215bdb2c868, L_00000215bdb2bda0, C4<>;
+    .scope S_00000215bdae6810;
+T_0 ;
+    %pushi/vec4 0, 0, 8;
+    %store/vec4 v00000215bdae45d0_0, 0, 8;
+    %end;
+    .thread T_0;
+    .scope S_00000215bdae6810;
+T_1 ;
+    %wait E_00000215bdad5370;
+    %load/vec4 v00000215bdae45d0_0;
+    %addi 1, 0, 8;
+    %assign/vec4 v00000215bdae45d0_0, 0;
+    %jmp T_1;
+    .thread T_1;
+    .scope S_00000215bdae6680;
+T_2 ;
+    %pushi/vec4 0, 0, 1;
+    %store/vec4 v00000215bdae4710_0, 0, 1;
+    %pushi/vec4 127, 0, 8;
+    %store/vec4 v00000215bdae4850_0, 0, 8;
+    %pushi/vec4 0, 0, 32;
+    %store/vec4 v00000215bdae47b0_0, 0, 32;
+    %end;
+    .thread T_2;
+    .scope S_00000215bdae6680;
+T_3 ;
+    %delay 10, 0;
+    %load/vec4 v00000215bdae4710_0;
+    %inv;
+    %store/vec4 v00000215bdae4710_0, 0, 1;
+    %jmp T_3;
+    .thread T_3;
+    .scope S_00000215bdae6680;
+T_4 ;
+    %wait E_00000215bdad5c70;
+    %load/vec4 v00000215bdae47b0_0;
+    %addi 1, 0, 32;
+    %store/vec4 v00000215bdae47b0_0, 0, 32;
+    %load/vec4 v00000215bdae47b0_0;
+    %cmpi/s 10, 0, 32;
+    %flag_or 5, 4; GT is !LE
+    %flag_inv 5;
+    %jmp/0xz  T_4.0, 5;
+    %vpi_call 2 16 "$finish" {0 0 0};
+T_4.0 ;
+    %jmp T_4;
+    .thread T_4;
+    .scope S_00000215bdae6680;
+T_5 ;
+    %vpi_call 2 23 "$dumpfile", "tb_PWM.vcd" {0 0 0};
+    %vpi_call 2 24 "$dumpvars", 32'sb00000000000000000000000000000000, S_00000215bdae6680 {0 0 0};
+    %end;
+    .thread T_5;
+# The file index is used to find the file name in the following table.
+:file_names 4;
+    "N/A";
+    "<interactive>";
+    "pwm_tb.v";
+    "pwm_generator.v";

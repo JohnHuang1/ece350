@@ -24,16 +24,13 @@
  *
  **/
 
-module Wrapper (input CLK10MHZ, input CPU_RESETN, input [15:0] SW,
-    output [15:0] LED
+module Wrapper (input CLK10MHZ, input CPU_RESETN, 
+		output [4:1] JA
     );
     
 	wire reset = ~CPU_RESETN;
     wire clock = CLK10MHZ;
-	wire [31:0] mem54_out, num1, num2;
-	assign num1 = {{24{1'b0}}, SW[7:0]};
-	assign num2 = {{24{1'b0}}, SW[15:8]};
-	assign LED = mem54_out[15:0];
+	wire [31:0] pwmReg0, pwmReg1, pwmReg2, pwmReg3;
 
 	wire rwe, mwe;
 	wire[4:0] rd, rs1, rs2;
@@ -42,24 +39,31 @@ module Wrapper (input CLK10MHZ, input CPU_RESETN, input [15:0] SW,
 		memAddr, memDataIn, memDataOut;
 		
     ila_0 debugger(.clk(CLK10MHZ), 
-		.probe0(instAddr),
-		.probe1(instData),
+		.probe0(pwmReg0),
+		.probe1(pwmReg1),
 		.probe2(rData),
 		.probe3(regA),
 		.probe4(regB),
 		.probe5(rd),
 		.probe6(rs1),
-		.probe7(rs2),
+		.probe7(JA[4:1]),
 		.probe8(mwe),
 		.probe9(reset),
 		.probe10(rwe),
-		.probe11(num1),
-		.probe12(num2));
+		.probe11(pwmReg2),
+		.probe12(pwmReg3));
+
+	// PWM Out
+	pwm_generator pwm0_gen(.clk(clock), .en(1'b1), .duty_cycle(pwmReg0[7:0]), .pwm_out(JA[1]));
+	pwm_generator pwm1_gen(.clk(clock), .en(1'b1), .duty_cycle(pwmReg1[7:0]), .pwm_out(JA[2]));
+	pwm_generator pwm2_gen(.clk(clock), .en(1'b1), .duty_cycle(pwmReg2[7:0]), .pwm_out(JA[3]));
+	pwm_generator pwm3_gen(.clk(clock), .en(1'b1), .duty_cycle(pwmReg3[7:0]), .pwm_out(JA[4]));
+
 
 
 	// ADD YOUR MEMORY FILE HERE
 	// localparam INSTR_FILE = "Test Files/Memory Files/rep_add";
-	localparam FILE = "mem_addr_add";
+	localparam FILE = "pwm_basic";
 	localparam DIR = "C:/Users/johnj/dev/ece350/processor/Test Files/";
 	localparam MEM_DIR = "Memory Files/";
 	localparam OUT_DIR = "Output Files/";
@@ -91,13 +95,7 @@ module Wrapper (input CLK10MHZ, input CPU_RESETN, input [15:0] SW,
 		.ctrl_writeEnable(rwe), .ctrl_reset(reset), 
 		.ctrl_writeReg(rd),
 		.ctrl_readRegA(rs1), .ctrl_readRegB(rs2), 
-		.data_writeReg(rData), .data_readRegA(regA), .data_readRegB(regB)
-		// // Direct I/O input
-		// .num1(num1), .num2(num2),
-
-		// //Direct I/O output,
-		// .out1(reg1_out)
-		);
+		.data_writeReg(rData), .data_readRegA(regA), .data_readRegB(regB));
 						
 	// Processor Memory (RAM)
 	RAM ProcMem(.clk(clock), 
@@ -105,11 +103,8 @@ module Wrapper (input CLK10MHZ, input CPU_RESETN, input [15:0] SW,
 		.addr(memAddr[11:0]), 
 		.dataIn(memDataIn), 
 		.dataOut(memDataOut), 
-
-		// Direct I/O input
-		.num1(num1), .num2(num2), 
 		
-		// Direct I/O output
-		.mem54_out(mem54_out));
+		// PWM Reg Output
+		.pwm0(pwmReg0), .pwm1(pwmReg1), .pwm2(pwmReg2), .pwm3(pwmReg3));
 
 endmodule

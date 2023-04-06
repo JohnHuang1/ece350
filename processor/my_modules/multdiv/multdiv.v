@@ -105,7 +105,7 @@ module multdiv(
     
     counter_mod32 counter(.clock(clock), .reset(op_start), .q(count), .enable(1'b1));
 
-    assign data_resulimage.pngtRDY = ~op_start && ((isMult && (&{~count[5], count[4], ~|{count[3:0]}})) || cla_overflow_return || 
+    assign data_resultRDY = ~op_start && ((isMult && (&{~count[5], count[4], ~|{count[3:0]}})) || cla_overflow_return || 
             (isDiv && ((&{count[5], ~|{count[4:0]}}) || ((&{~|{count[5:2]}, &{count[1:0]}}) && M_is_zero))));
 
     assign M_is_zero = ~|M;
