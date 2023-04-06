@@ -42,7 +42,8 @@ module multdiv(
     dffe_ref dividend_sign_latch(.q(operand_A_is_negative), .d(data_operandA[31]), .clk(clock), .en(op_start));
 
     // Running
-    tff toggle_running(.T(op_start || data_resultRDY), .clock(clock), .en(op_start || data_resultRDY), .clr(1'b0), .q(module_running));
+    tff toggle_running(.T(op_start || data_resultRDY), .clock(clock), 
+        .en(op_start || data_resultRDY), .clr(1'b0), .q(module_running));
 
     // M
     reg32 M_reg(.data(data_operandB), .clk(clock), .write_enable(op_start), .out(M));
@@ -104,7 +105,8 @@ module multdiv(
     
     counter_mod32 counter(.clock(clock), .reset(op_start), .q(count), .enable(1'b1));
 
-    assign data_resultRDY = ~op_start && ((isMult && (&{~count[5], count[4], ~|{count[3:0]}})) || cla_overflow_return || (isDiv && ((&{count[5], ~|{count[4:0]}}) || ((&{~|{count[5:2]}, &{count[1:0]}}) && M_is_zero))));
+    assign data_resulimage.pngtRDY = ~op_start && ((isMult && (&{~count[5], count[4], ~|{count[3:0]}})) || cla_overflow_return || 
+            (isDiv && ((&{count[5], ~|{count[4:0]}}) || ((&{~|{count[5:2]}, &{count[1:0]}}) && M_is_zero))));
 
     assign M_is_zero = ~|M;
     // Overflow

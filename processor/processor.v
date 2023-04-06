@@ -118,7 +118,8 @@ module processor(
     wire [4:0] updated_rd;
     decoder32 x_opcode_decoder(.select(dx_ir_out[31:27]), .out(dxo), .enable(1'b1));
     wire alu_neq, alu_lt, alu_of;
-    alu math_unit(.data_operandA(alu_opA), .data_operandB(alu_opB), .data_result(alu_out), .ctrl_ALUopcode(alu_opcode), .ctrl_shiftamt(alu_shamt), .isNotEqual(alu_neq), .isLessThan(alu_lt), .overflow(alu_of));
+    alu math_unit(.data_operandA(alu_opA), .data_operandB(alu_opB), .data_result(alu_out), .ctrl_ALUopcode(alu_opcode), 
+                .ctrl_shiftamt(alu_shamt), .isNotEqual(alu_neq), .isLessThan(alu_lt), .overflow(alu_of));
 
     wire [31:0] sx_immediate = {{15{dx_ir_out[16]}}, dx_ir_out[16:0]};
     assign alu_opA = bypassed_a;
@@ -186,7 +187,8 @@ module processor(
 
     wire bne_condition = dxo[2] && alu_neq; // True if x op == bne (00010) && $rs != $rd
     wire blt_condition = dxo[6] && (alu_neq && ~alu_lt); // True if x op == blt (00110) && ($rs != $rd) && !($rs < $rd)
-    wire bex_condition = dxo[22] && (bypassed_b != 5'd0); // if bex opcode (10110) then dx_b_out will have $rstatus. True if $rstatus != 0
+    wire bex_condition = dxo[22] && (bypassed_b != 5'd0); 
+            // if bex opcode (10110) then dx_b_out will have $rstatus. True if $rstatus != 0
 
     wire pc_direct_assign = dxo[1] || dxo[3] || dxo[4]; // opcodes that directly assign pc (j, jal, jr)
     assign pc_branch_wren = pc_direct_assign || bne_condition || blt_condition || bex_condition;
@@ -244,13 +246,16 @@ module processor(
     // Multdiv
     wire[31:0] multdiv_op_a, multdiv_op_b, multdiv_result;
     wire ctrl_MULT, ctrl_DIV, clock, multdiv_ex, multdiv_resultRDY, multdiv_active, multdiv_running;
-    multdiv mult_div_module(.data_operandA(multdiv_op_a), .data_operandB(multdiv_op_b), .ctrl_MULT(ctrl_MULT), .ctrl_DIV(ctrl_DIV), .clock(clock), .data_result(multdiv_result), .data_exception(multdiv_ex), .data_resultRDY(multdiv_resultRDY), .module_running(multdiv_running));
+    multdiv mult_div_module(.data_operandA(multdiv_op_a), .data_operandB(multdiv_op_b), .ctrl_MULT(ctrl_MULT), 
+        .ctrl_DIV(ctrl_DIV), .clock(clock), .data_result(multdiv_result), 
+        .data_exception(multdiv_ex), .data_resultRDY(multdiv_resultRDY), .module_running(multdiv_running));
 
     assign multdiv_active = multdiv_running || ctrl_DIV || ctrl_MULT;
     wire [31:0] p_data, p_ir_out, p_ir_final;
     wire pw_p_ex_out, pw_p_rdy_out;
     // reg32 pw_p_reg(.data(multdiv_result), .out(pw_p_out), .write_enable(multdiv_resultRDY), .clk(clock), .clear(reset));
-    reg32 p_ir_reg(.data(dx_ir_out), .out(p_ir_out), .write_enable(ctrl_MULT || ctrl_DIV || ~multdiv_active), .clk(clock), .clear(reset));
+    reg32 p_ir_reg(.data(dx_ir_out), .out(p_ir_out), .write_enable(ctrl_MULT || ctrl_DIV || ~multdiv_active), 
+        .clk(clock), .clear(reset));
     // dffe_ref pw_p_ex_reg(.q(pw_p_ex_out), .d(multdiv_ex), .clk(clock), .en(multdiv_resultRDY), .clr(reset));
     // dffe_ref pw_p_rdy_reg(.q(pw_p_rdy_out), .d(multdiv_resultRDY), .clk(clock), .en(1'b1), .clr(reset));
 
