@@ -22,6 +22,7 @@
  * You must change line 36 to add the memory file of the test you created using the assembler
  * For example, you would add sample inside of the quotes on line 38 after assembling sample.s
  *
+ iverilog -o proc -c CFILES.txt -s Wrapper_tb -P Wrapper_tb.FILE=\"sample\"
  **/
 
 module Wrapper (input CLK10MHZ, input CPU_RESETN, 
