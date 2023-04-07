@@ -25,13 +25,15 @@
  iverilog -o proc -c CFILES.txt -s Wrapper_tb -P Wrapper_tb.FILE=\"sample\"
  **/
 
-module Wrapper (input CLK10MHZ, input CPU_RESETN, 
-		output [4:1] JA
+module Wrapper (input CLK10MHZ, input CPU_RESETN, input [7:0] SW,
+		output [5:1] JA
     );
-    
+
 	wire reset = ~CPU_RESETN;
     wire clock = CLK10MHZ;
 	wire [31:0] pwmReg0, pwmReg1, pwmReg2, pwmReg3;
+	
+	// assign JA[5] = clock;
 
 	wire rwe, mwe;
 	wire[4:0] rd, rs1, rs2;
@@ -55,10 +57,11 @@ module Wrapper (input CLK10MHZ, input CPU_RESETN,
 		.probe12(pwmReg3));
 
 	// PWM Out
-	pwm_generator pwm0_gen(.clk(clock), .en(1'b1), .duty_cycle(pwmReg0[7:0]), .pwm_out(JA[1]));
-	pwm_generator pwm1_gen(.clk(clock), .en(1'b1), .duty_cycle(pwmReg1[7:0]), .pwm_out(JA[2]));
-	pwm_generator pwm2_gen(.clk(clock), .en(1'b1), .duty_cycle(pwmReg2[7:0]), .pwm_out(JA[3]));
-	pwm_generator pwm3_gen(.clk(clock), .en(1'b1), .duty_cycle(pwmReg3[7:0]), .pwm_out(JA[4]));
+	pwm_generator #(.SLOW_CLOCK_BITS(13))pwm0_gen(.clk(clock), .en(1'b1), .duty_cycle(SW), .pwm_out(JA[1]));
+	pwm_generator #(.SLOW_CLOCK_BITS(12)) pwm1_gen(.clk(clock), .en(1'b1), .duty_cycle(SW), .pwm_out(JA[2]));
+	pwm_generator #(.SLOW_CLOCK_BITS(11)) pwm2_gen(.clk(clock), .en(1'b1), .duty_cycle(SW), .pwm_out(JA[3]));
+	pwm_generator #(.SLOW_CLOCK_BITS(10)) pwm3_gen(.clk(clock), .en(1'b1), .duty_cycle(SW), .pwm_out(JA[4]));
+	pwm_generator #(.SLOW_CLOCK_BITS(9)) pwm4_gen(.clk(clock), .en(1'b1), .duty_cycle(SW), .pwm_out(JA[5]));
 
 
 

@@ -20,6 +20,9 @@ module RAM #( parameter DATA_WIDTH = 32, ADDRESS_WIDTH = 12, DEPTH = 4096) (
         for (i = 0; i < DEPTH; i = i + 1) begin
             MemoryArray[i] <= 0;
         end
+        for(i = 0; i < 4; i = i + 1) begin
+            PWMRegArray[i] <= 0;
+        end
         // if(MEMFILE > 0) begin
         //     $readmemh(MEMFILE, MemoryArray);
         // end

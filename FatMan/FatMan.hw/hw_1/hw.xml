@@ -15,7 +15,7 @@
   </ObjectList>
   <ObjectList object_type="hw_ila" gui_info="">
     <Object name="debugger" gui_info="">
-      <Properties Property="CONTROL.DATA_DEPTH" value="256"/>
+      <Properties Property="CONTROL.DATA_DEPTH" value="512"/>
       <Properties Property="CONTROL.TRIGGER_CONDITION" value="OR"/>
       <Properties Property="CONTROL.TRIGGER_MODE" value="BASIC_ONLY"/>
       <Properties Property="CONTROL.TRIGGER_POSITION" value="1"/>
