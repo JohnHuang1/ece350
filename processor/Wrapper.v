@@ -26,14 +26,15 @@
  **/
 
 module Wrapper (input CLK10MHZ, input CPU_RESETN, input [7:0] SW,
-		output [5:1] JA, output [8:1] JB
+		output [5:1] JA, output [8:1] JB, output[7:0] LED,
+		input [8:1] JC
     );
 
 	wire reset = ~CPU_RESETN;
     wire clock = CLK10MHZ;
 	wire [31:0] pwmReg0, pwmReg1, pwmReg2, pwmReg3;
 	
-	// assign JA[5] = clock;
+	wire [7:0] digital_inputs;
 
 	wire rwe, mwe;
 	wire[4:0] rd, rs1, rs2;
@@ -63,11 +64,19 @@ module Wrapper (input CLK10MHZ, input CPU_RESETN, input [7:0] SW,
 	pwm_generator #(.SLOW_CLOCK_BITS(10)) pwm3_gen(.clk(clock), .en(1'b1), .duty_cycle(SW), .pwm_out(JA[4]));
 	pwm_generator #(.SLOW_CLOCK_BITS(9)) pwm4_gen(.clk(clock), .en(1'b1), .duty_cycle(SW), .pwm_out(JA[5]));
 
+	// Debounce Inputs
+	genvar i;
+	generate
+		for(i = 1; i < 9; i = i + 1) begin: btn_debouncer_gen
+			btn_debouncer debouncer(.pb(JC[i]), .clk(clock), .pb_out(digital_inputs[i-1]));
+		end
+	endgenerate
 
+	assign LED = digital_inputs;
 
 	// ADD YOUR MEMORY FILE HERE
 	// localparam INSTR_FILE = "Test Files/Memory Files/rep_add";
-	localparam FILE = "pwm_basic";
+	localparam FILE = "motor_drive";
 	localparam DIR = "C:/Users/johnj/dev/ece350/processor/Test Files/";
 	localparam MEM_DIR = "Memory Files/";
 	localparam OUT_DIR = "Output Files/";
