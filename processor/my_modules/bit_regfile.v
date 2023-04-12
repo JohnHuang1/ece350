@@ -8,7 +8,7 @@ module bit_regfile #(
     genvar i;
     generate
         for(i = 0; i < SIZE; i = i + 1) begin: bit_reg_loop
-            dffe_ref register(.q(out[i]), .d(data), .clk(clk), .en(enable && select[i]), .clr(clr))
+            dffe_ref register(.q(out[i]), .d(data), .clk(clk), .en(enable && select[i]), .clr(clr));
         end
     endgenerate
     

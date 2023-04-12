@@ -228,7 +228,7 @@ module processor(
     wire is_fpga_out_op = dmo[12] || dmo[13];
     wire fpga_data = dmo[13] ? 1'b1 : 1'b0;
     wire [7:0] fpga_bit_regs_out;
-    decoder32 fpga_out_decoder(.select(xm_o_out), .out(fpga_out_select), .enable(is_fpga_out_op));
+    decoder32 fpga_out_decoder(.select(xm_o_out[4:0]), .out(fpga_out_select), .enable(is_fpga_out_op));
     bit_regfile fpga_out_regs(.select(fpga_out_select[7:0]), .out(fpga_bit_regs_out), .data(fpga_data), .enable(is_fpga_out_op), .clk(n_clock), .clr(reset));
     assign output_pins = fpga_bit_regs_out;
 

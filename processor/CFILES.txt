@@ -33,6 +33,8 @@ C:\Users\johnj\dev\ece350\processor\my_modules\regfile\decoder32.v
 C:\Users\johnj\dev\ece350\processor\my_modules\regfile\reg32.v
 C:\Users\johnj\dev\ece350\processor\my_modules\regfile\regfile.v
 C:\Users\johnj\dev\ece350\processor\my_modules\sr_latch.v
+C:\Users\johnj\dev\ece350\processor\my_modules\bit_regfile.v
+C:\Users\johnj\dev\ece350\processor\my_modules\btn_debouncer.v
 C:\Users\johnj\dev\ece350\processor\Provided Behavioral Components\alu.v
 C:\Users\johnj\dev\ece350\processor\Provided Behavioral Components\dffe_ref.v
 C:\Users\johnj\dev\ece350\processor\Provided Behavioral Components\divider.v

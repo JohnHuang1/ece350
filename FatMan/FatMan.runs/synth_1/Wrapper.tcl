@@ -70,10 +70,6 @@ proc create_report { reportName command } {
   }
 }
 OPTRACE "synth_1" START { ROLLUP_AUTO }
-set_param tcl.collectionResultDisplayLimit 0
-set_param chipscope.maxJobs 5
-set_param xicom.use_bs_reader 1
-set_msg_config -id {Common 17-41} -limit 10000000
 OPTRACE "Creating in-memory project" START { }
 create_project -in_memory -part xc7a100tcsg324-1
 
@@ -98,6 +94,8 @@ read_verilog -library xil_defaultlib {
   C:/Users/johnj/dev/ece350/processor/RAM.v
   C:/Users/johnj/dev/ece350/processor/ROM.v
   C:/Users/johnj/dev/ece350/processor/my_modules/alu/alu.v
+  C:/Users/johnj/dev/ece350/processor/my_modules/bit_regfile.v
+  C:/Users/johnj/dev/ece350/processor/my_modules/btn_debouncer.v
   C:/Users/johnj/dev/ece350/processor/my_modules/alu/cla/cla32bit.v
   C:/Users/johnj/dev/ece350/processor/my_modules/alu/cla/cla8bit.v
   C:/Users/johnj/dev/ece350/processor/my_modules/multdiv/counter/counter_mod32.v
