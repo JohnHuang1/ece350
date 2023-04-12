@@ -26,7 +26,7 @@
  **/
 
 module Wrapper (input CLK10MHZ, input CPU_RESETN, input [7:0] SW,
-		output [5:1] JA
+		output [5:1] JA, output [8:1] JB
     );
 
 	wire reset = ~CPU_RESETN;
@@ -86,7 +86,11 @@ module Wrapper (input CLK10MHZ, input CPU_RESETN, input [7:0] SW,
 									
 		// RAM
 		.wren(mwe), .address_dmem(memAddr), 
-		.data(memDataIn), .q_dmem(memDataOut)); 
+		.data(memDataIn), .q_dmem(memDataOut),
+		
+		// Output Lines
+		.output_pins(JB[8:1])
+		); 
 	
 	// Instruction Memory (ROM)
 	ROM #(.MEMFILE({DIR, MEM_DIR, FILE, ".mem"}))

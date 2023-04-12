@@ -39,8 +39,10 @@ module processor(
     ctrl_readRegB,                  // O: Register to read from port B of RegFile
     data_writeReg,                  // O: Data to write to for RegFile
     data_readRegA,                  // I: Data from port A of RegFile
-    data_readRegB                   // I: Data from port B of RegFile
+    data_readRegB,                   // I: Data from port B of RegFile
 	 
+    // OUTPUT Lines
+    output_pins
 	);
 
 	// Control signals
@@ -60,6 +62,9 @@ module processor(
 	output [4:0] ctrl_writeReg, ctrl_readRegA, ctrl_readRegB;
 	output [31:0] data_writeReg;
 	input [31:0] data_readRegA, data_readRegB;
+
+    // Output Lines
+    output [7:0] output_pins;
 
     // Falling edge clock
     wire n_clock = ~clock;
@@ -123,7 +128,7 @@ module processor(
 
     wire [31:0] sx_immediate = {{15{dx_ir_out[16]}}, dx_ir_out[16:0]};
     assign alu_opA = bypassed_a;
-    assign alu_opB = |{dxo[5], dxo[7], dxo[8]} ? sx_immediate : bypassed_b;
+    assign alu_opB = |{dxo[5], dxo[7], dxo[8], dxo[12], dxo[13]} ? sx_immediate : bypassed_b;
     assign alu_opcode = dxo[0] ? dx_ir_out[6:2] : (dxo[2] || dxo[6] ? 5'b00001 : 5'b00000);
         // if (x stage op == alu_op (00000))
             // use alu_op
@@ -137,10 +142,11 @@ module processor(
     decoder32 x_alu_opcode_decoder(.select(alu_opcode), .out(dxao), .enable(1'b1));
 
     // On overflow
-    wire is_of_opcode = dxao[0] || dxao[1] || dxo[5];
+    wire is_of_opcode = (dxo[0] && (dxao[0] || dxao[1])) || dxo[5];
         // The following alu_opcodes can overflow
-            // add (00000)
-            // sub (00001)
+            // alu_op (00000) && ->
+                // add (00000)
+                // sub (00001)
             // addi (which is just add)
     assign alu_result = is_of_opcode && alu_of ? alu_ex_code : alu_out;
 
@@ -217,6 +223,15 @@ module processor(
     decoder32 m_opcode_decoder(.select(xm_ir_out[31:27]), .out(dmo), .enable(1'b1));
     assign wren = dmo[7]; // Data Memory write enable when opcode sw (00111)
 
+        // Write to FPGA Output
+    wire[31:0] fpga_out_select;
+    wire is_fpga_out_op = dmo[12] || dmo[13];
+    wire fpga_data = dmo[13] ? 1'b1 : 1'b0;
+    wire [7:0] fpga_bit_regs_out;
+    decoder32 fpga_out_decoder(.select(xm_o_out), .out(fpga_out_select), .enable(is_fpga_out_op));
+    bit_regfile fpga_out_regs(.select(fpga_out_select[7:0]), .out(fpga_bit_regs_out), .data(fpga_data), .enable(is_fpga_out_op), .clk(n_clock), .clr(reset));
+    assign output_pins = fpga_bit_regs_out;
+
     // M/W regs
     wire[31:0] mw_ir_in, mw_ir_out, mw_o_in, mw_o_out, mw_d_out;
     assign mw_ir_in = p_data_rdy ? p_ir_final : xm_ir_out;
@@ -253,18 +268,13 @@ module processor(
     assign multdiv_active = multdiv_running || ctrl_DIV || ctrl_MULT;
     wire [31:0] p_data, p_ir_out, p_ir_final;
     wire pw_p_ex_out, pw_p_rdy_out;
-    // reg32 pw_p_reg(.data(multdiv_result), .out(pw_p_out), .write_enable(multdiv_resultRDY), .clk(clock), .clear(reset));
     reg32 p_ir_reg(.data(dx_ir_out), .out(p_ir_out), .write_enable(ctrl_MULT || ctrl_DIV || ~multdiv_active), 
         .clk(clock), .clear(reset));
-    // dffe_ref pw_p_ex_reg(.q(pw_p_ex_out), .d(multdiv_ex), .clk(clock), .en(multdiv_resultRDY), .clr(reset));
-    // dffe_ref pw_p_rdy_reg(.q(pw_p_rdy_out), .d(multdiv_resultRDY), .clk(clock), .en(1'b1), .clr(reset));
 
     assign multdiv_op_a = bypassed_a;
     assign multdiv_op_b = bypassed_b;
     assign ctrl_MULT = dxo[0] && dxao[6];
     assign ctrl_DIV = dxo[0] && dxao[7];
-
-    // dffe_ref p_latch(.q(multdiv_active), .d(ctrl_MULT || ctrl_DIV), .clk(clock), .en(ctrl_MULT || ctrl_DIV), .clr(multdiv_resultRDY || reset));
 
     wire[4:0] p_reg = multdiv_ex ? 5'b11110 : p_ir_out[26:22];
     assign p_ir_final = {p_ir_out[31:27], p_reg, p_ir_out[21:0]};
@@ -299,7 +309,7 @@ module processor(
             // setx (10101) 
                 // Both jal and setx are JI-type instr but their dest reg is set in xm_ir[26:22]
 
-    wire dx_op_reads_rs = dxo[0] || dxo[2] || dxo[5] || dxo[6] || dxo[7] || dxo[8];
+    wire dx_op_reads_rs = dxo[0] || dxo[2] || dxo[5] || dxo[6] || dxo[7] || dxo[8] || dxo[12] || dxo[13];
         // if opcode is one of following then it reads from $rs (ir[21:17])
             // alu_op (00000)
             // bne (00010)
@@ -307,6 +317,8 @@ module processor(
             // blt (00110)
             // sw (00111)
             // lw (01000)
+            // writeh (01101)
+            // writel (01100)
     wire [4:0] dx_ir_rs = dx_ir_out[21:17];
     wire [4:0] dx_ir_rd = dx_ir_out[26:22];
     wire [4:0] xm_ir_rd = xm_ir_out[26:22];
