@@ -42,7 +42,10 @@ module processor(
     data_readRegB,                   // I: Data from port B of RegFile
 	 
     // OUTPUT Lines
-    output_pins
+    output_pins,
+
+    // INPUT lines
+    input_pins // Digital
 	);
 
 	// Control signals
@@ -65,6 +68,9 @@ module processor(
 
     // Output Lines
     output [7:0] output_pins;
+
+    // Digital Input Lines
+    input[7:0] input_pins;
 
     // Falling edge clock
     wire n_clock = ~clock;
@@ -128,7 +134,7 @@ module processor(
 
     wire [31:0] sx_immediate = {{15{dx_ir_out[16]}}, dx_ir_out[16:0]};
     assign alu_opA = bypassed_a;
-    assign alu_opB = |{dxo[5], dxo[7], dxo[8], dxo[12], dxo[13]} ? sx_immediate : bypassed_b;
+    assign alu_opB = |{dxo[5], dxo[7], dxo[8], dxo[12], dxo[13], dxo[14]} ? sx_immediate : bypassed_b;
     assign alu_opcode = dxo[0] ? dx_ir_out[6:2] : (dxo[2] || dxo[6] ? 5'b00001 : 5'b00000);
         // if (x stage op == alu_op (00000))
             // use alu_op
@@ -166,7 +172,13 @@ module processor(
                 (dxao[0] ? 32'd1 : 
                 (dxao[1] ? 32'd3 : 32'd0))
             : 32'd0);
-
+    
+    // Reading Digital Input
+    wire selected_digital_input;
+    mux_8 #(.BIT_WIDTH(1)) digital_input_mux(.out(selected_digital_input), .select(alu_result[2:0]), 
+        .in0(input_pins[0]), .in1(input_pins[1]), .in2(input_pins[2]), .in3(input_pins[3]), 
+        .in4(input_pins[4]), .in5(input_pins[5]), .in6(input_pins[6]), .in7(input_pins[7]));
+    wire [31:0] extended_digital_input = {{31{1'b0}}, selected_digital_input};
 
     // Branch logic
     wire[31:0] on_branch_pc, pc_adder_out;
@@ -203,9 +215,11 @@ module processor(
     // X/M regs
     wire[31:0] xm_ir_out, xm_o_in, xm_o_out, xm_b_out;
     assign xm_ir_in = {dx_ir_out[31:27], updated_rd, dx_ir_out[21:0]};
-    assign xm_o_in = dxo[3] ? dx_pc_out : (dxo[21] ? target : alu_result); 
+    assign xm_o_in = dxo[14] ? extended_digital_input : (dxo[3] ? dx_pc_out : (dxo[21] ? target : alu_result)); 
         // Muxing xm_o_in
-        // if jal (00011) 
+        // if ldi (01110)
+            // val = {32{1'b0}, selected_digital_input}
+        // else if jal (00011) 
             // val = pc + 1
         // else if setx (10101)
             // val = target
@@ -249,14 +263,15 @@ module processor(
         // if lw (01000) then 
             // write data from memory to reg
         // else 
-            // write alu output to reg 
-    assign ctrl_writeEnable = dwo[0] || dwo[5] || dwo [8] || dwo[3] || dwo[21];
+            // write alu output (* not always alu output) to reg 
+    assign ctrl_writeEnable = dwo[0] || dwo[5] || dwo [8] || dwo[3] || dwo[21] || dwo[14];
         // enable regfile write if opcode:
             // alu_op 00000
             // addi 00101
             // jal 00011
             // setx 10101
             // lw 01000
+            // ldi 01110
 
     // Multdiv
     wire[31:0] multdiv_op_a, multdiv_op_b, multdiv_result;
@@ -300,7 +315,7 @@ module processor(
         // else
             // dx_a/b_out value is used (normal value)
 
-    wire xm_op_is_write_to_reg = dmo[0] || dmo[5] || dmo[8] || dmo[3] || dmo[21];
+    wire xm_op_is_write_to_reg = dmo[0] || dmo[5] || dmo[8] || dmo[3] || dmo[21] || dmo[14];
         // if opcode is one of following then it writes to reg defined by xm_ir[26:22]
             // alu_op (00000)
             // addi (00101)
@@ -308,8 +323,9 @@ module processor(
             // jal (00011)
             // setx (10101) 
                 // Both jal and setx are JI-type instr but their dest reg is set in xm_ir[26:22]
+            // ldi (01110)
 
-    wire dx_op_reads_rs = dxo[0] || dxo[2] || dxo[5] || dxo[6] || dxo[7] || dxo[8] || dxo[12] || dxo[13];
+    wire dx_op_reads_rs = |{dxo[0], dxo[2], dxo[5], dxo[6], dxo[7], dxo[8], dxo[12], dxo[13], dxo[14]};
         // if opcode is one of following then it reads from $rs (ir[21:17])
             // alu_op (00000)
             // bne (00010)
@@ -319,6 +335,7 @@ module processor(
             // lw (01000)
             // writeh (01101)
             // writel (01100)
+            // ldi (01110)
     wire [4:0] dx_ir_rs = dx_ir_out[21:17];
     wire [4:0] dx_ir_rd = dx_ir_out[26:22];
     wire [4:0] xm_ir_rd = xm_ir_out[26:22];
@@ -370,7 +387,7 @@ module processor(
             // jr (00100)
             // blt (00110)
             // sw (00111) (don't need this one because of w to m stage bypass)
-    wire fd_op_reads_rs = ddo[0] || ddo[2] || ddo[5] || ddo[6] || ddo[7] || ddo[8];
+    wire fd_op_reads_rs = |{ddo[0], ddo[2], ddo[5], ddo[6], ddo[7], ddo[8], ddo[12], ddo[13], ddo[14]};
         // if opcode is one of following then it reads from $rs (fd_ir[21:17])
             // alu_op (00000)
             // bne (00010)

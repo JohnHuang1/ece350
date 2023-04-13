@@ -42,33 +42,33 @@ module Wrapper (input CLK10MHZ, input CPU_RESETN, input [7:0] SW,
 		rData, regA, regB,
 		memAddr, memDataIn, memDataOut;
 		
-    ila_0 debugger(.clk(CLK10MHZ), 
-		.probe0(pwmReg0),
-		.probe1(pwmReg1),
-		.probe2(rData),
-		.probe3(regA),
-		.probe4(regB),
-		.probe5(rd),
-		.probe6(rs1),
-		.probe7(JA[4:1]),
-		.probe8(mwe),
-		.probe9(reset),
-		.probe10(rwe),
-		.probe11(pwmReg2),
-		.probe12(pwmReg3));
+    // ila_0 debugger(.clk(CLK10MHZ), 
+	// 	.probe0(pwmReg0),
+	// 	.probe1(memDataOut),
+	// 	.probe2(rData),
+	// 	.probe3(regA),
+	// 	.probe4(regB),
+	// 	.probe5(rd),
+	// 	.probe6(rs1),
+	// 	.probe7(JA[4:1]),
+	// 	.probe8(mwe),
+	// 	.probe9(reset),
+	// 	.probe10(rwe),
+	// 	.probe11(memDataIn),
+	// 	.probe12(memAddr));
 
 	// PWM Out
-	pwm_generator #(.SLOW_CLOCK_BITS(13))pwm0_gen(.clk(clock), .en(1'b1), .duty_cycle(SW), .pwm_out(JA[1]));
-	pwm_generator #(.SLOW_CLOCK_BITS(12)) pwm1_gen(.clk(clock), .en(1'b1), .duty_cycle(SW), .pwm_out(JA[2]));
-	pwm_generator #(.SLOW_CLOCK_BITS(11)) pwm2_gen(.clk(clock), .en(1'b1), .duty_cycle(SW), .pwm_out(JA[3]));
-	pwm_generator #(.SLOW_CLOCK_BITS(10)) pwm3_gen(.clk(clock), .en(1'b1), .duty_cycle(SW), .pwm_out(JA[4]));
-	pwm_generator #(.SLOW_CLOCK_BITS(9)) pwm4_gen(.clk(clock), .en(1'b1), .duty_cycle(SW), .pwm_out(JA[5]));
+	pwm_generator #(.SLOW_CLOCK_BITS(13))pwm0_gen(.clk(clock), .en(1'b1), .duty_cycle(pwmReg0[7:0]), .pwm_out(JA[1]));
+	pwm_generator #(.SLOW_CLOCK_BITS(12)) pwm1_gen(.clk(clock), .en(1'b1), .duty_cycle(pwmReg1[7:0]), .pwm_out(JA[2]));
+	pwm_generator #(.SLOW_CLOCK_BITS(11)) pwm2_gen(.clk(clock), .en(1'b1), .duty_cycle(pwmReg2[7:0]), .pwm_out(JA[3]));
+	pwm_generator #(.SLOW_CLOCK_BITS(10)) pwm3_gen(.clk(clock), .en(1'b1), .duty_cycle(pwmReg3[7:0]), .pwm_out(JA[4]));
+	pwm_generator #(.SLOW_CLOCK_BITS(13)) pwm4_gen(.clk(clock), .en(1'b1), .duty_cycle(SW), .pwm_out(JA[5]));
 
 	// Debounce Inputs
 	genvar i;
 	generate
 		for(i = 1; i < 9; i = i + 1) begin: btn_debouncer_gen
-			btn_debouncer debouncer(.pb(JC[i]), .clk(clock), .pb_out(digital_inputs[i-1]));
+			btn_debouncer debouncer(.pb(SW[i - 1]), .clk(clock), .pb_out(digital_inputs[i-1]));
 		end
 	endgenerate
 
@@ -76,7 +76,7 @@ module Wrapper (input CLK10MHZ, input CPU_RESETN, input [7:0] SW,
 
 	// ADD YOUR MEMORY FILE HERE
 	// localparam INSTR_FILE = "Test Files/Memory Files/rep_add";
-	localparam FILE = "motor_drive";
+	localparam FILE = "test_ldi";
 	localparam DIR = "C:/Users/johnj/dev/ece350/processor/Test Files/";
 	localparam MEM_DIR = "Memory Files/";
 	localparam OUT_DIR = "Output Files/";
@@ -98,7 +98,10 @@ module Wrapper (input CLK10MHZ, input CPU_RESETN, input [7:0] SW,
 		.data(memDataIn), .q_dmem(memDataOut),
 		
 		// Output Lines
-		.output_pins(JB[8:1])
+		.output_pins(JB[8:1]),
+
+		// Digital Input Lines
+		.input_pins(digital_inputs)
 		); 
 	
 	// Instruction Memory (ROM)

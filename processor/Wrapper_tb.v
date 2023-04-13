@@ -33,7 +33,7 @@
  *
  **/
 
-module Wrapper_tb #(parameter FILE = "motor_drive");
+module Wrapper_tb #(parameter FILE = "test_ldi");
 
 	// FileData
 	localparam DIR = "C:/Users/johnj/dev/ece350/processor/Test Files/";
@@ -92,7 +92,9 @@ module Wrapper_tb #(parameter FILE = "motor_drive");
 									
 		// RAM
 		.wren(mwe), .address_dmem(memAddr), 
-		.data(memDataIn), .q_dmem(memDataOut)); 
+		.data(memDataIn), .q_dmem(memDataOut),
+		
+		.input_pins(8'b00000001)); 
 	
 	// Instruction Memory (ROM)
 	ROM #(.MEMFILE({DIR, MEM_DIR, FILE, ".mem"}))

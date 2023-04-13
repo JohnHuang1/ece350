@@ -134,11 +134,9 @@ OPTRACE "set parameters" START { }
   set_property parent.project_path C:/Users/johnj/dev/ece350/FatMan/FatMan.xpr [current_project]
   set_property ip_output_repo C:/Users/johnj/dev/ece350/FatMan/FatMan.cache/ip [current_project]
   set_property ip_cache_permissions {read write} [current_project]
-  set_property XPM_LIBRARIES {XPM_CDC XPM_MEMORY} [current_project]
 OPTRACE "set parameters" END { }
 OPTRACE "add files" START { }
   add_files -quiet C:/Users/johnj/dev/ece350/FatMan/FatMan.runs/synth_1/Wrapper.dcp
-  read_ip -quiet C:/Users/johnj/dev/ece350/FatMan/FatMan.srcs/sources_1/ip/ila_0/ila_0.xci
 OPTRACE "read constraints: implementation" START { }
   read_xdc C:/Users/johnj/dev/ece350/processor/master.xdc
 OPTRACE "read constraints: implementation" END { }
@@ -305,7 +303,6 @@ set rc [catch {
   create_msg_db write_bitstream.pb
 OPTRACE "read constraints: write_bitstream" START { }
 OPTRACE "read constraints: write_bitstream" END { }
-  set_property XPM_LIBRARIES {XPM_CDC XPM_MEMORY} [current_project]
   catch { write_mem_info -force Wrapper.mmi }
 OPTRACE "write_bitstream setup" END { }
 OPTRACE "write_bitstream" START { }
