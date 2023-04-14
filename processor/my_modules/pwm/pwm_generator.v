@@ -18,6 +18,6 @@ always @(posedge slow_clk) begin
     pwm_counter <= pwm_counter + 1;
 end
 
-assign pwm_out = duty_cycle > pwm_counter ? 1'b1 : 1'b0;
+assign pwm_out = duty_cycle >= pwm_counter && |duty_cycle ? 1'b1 : 1'b0;
     
 endmodule

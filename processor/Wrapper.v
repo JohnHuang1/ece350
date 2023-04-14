@@ -25,16 +25,16 @@
  iverilog -o proc -c CFILES.txt -s Wrapper_tb -P Wrapper_tb.FILE=\"sample\"
  **/
 
-module Wrapper (input CLK10MHZ, input CPU_RESETN, input [7:0] SW,
-		output [5:1] JA, output [8:1] JB, output[7:0] LED,
+module Wrapper (input CLK10MHZ, input CPU_RESETN, input [15:0] SW,
+		output [5:1] JA, output [8:1] JB, output[15:0] LED,
 		input [8:1] JC
     );
 
 	wire reset = ~CPU_RESETN;
     wire clock = CLK10MHZ;
-	wire [31:0] pwmReg0, pwmReg1, pwmReg2, pwmReg3;
+	wire [31:0] pwmReg0, pwmReg1, pwmReg2, pwmReg3, pwmReg4;
 	
-	wire [7:0] digital_inputs;
+	wire [15:0] digital_inputs;
 
 	wire rwe, mwe;
 	wire[4:0] rd, rs1, rs2;
@@ -58,17 +58,17 @@ module Wrapper (input CLK10MHZ, input CPU_RESETN, input [7:0] SW,
 	// 	.probe12(memAddr));
 
 	// PWM Out
-	pwm_generator #(.SLOW_CLOCK_BITS(13))pwm0_gen(.clk(clock), .en(1'b1), .duty_cycle(pwmReg0[7:0]), .pwm_out(JA[1]));
-	pwm_generator #(.SLOW_CLOCK_BITS(12)) pwm1_gen(.clk(clock), .en(1'b1), .duty_cycle(pwmReg1[7:0]), .pwm_out(JA[2]));
-	pwm_generator #(.SLOW_CLOCK_BITS(11)) pwm2_gen(.clk(clock), .en(1'b1), .duty_cycle(pwmReg2[7:0]), .pwm_out(JA[3]));
-	pwm_generator #(.SLOW_CLOCK_BITS(10)) pwm3_gen(.clk(clock), .en(1'b1), .duty_cycle(pwmReg3[7:0]), .pwm_out(JA[4]));
-	pwm_generator #(.SLOW_CLOCK_BITS(13)) pwm4_gen(.clk(clock), .en(1'b1), .duty_cycle(SW), .pwm_out(JA[5]));
+	pwm_generator #(.SLOW_CLOCK_BITS(13)) pwm0_gen(.clk(clock), .en(1'b1), .duty_cycle(pwmReg0[7:0]), .pwm_out(JA[1]));
+	pwm_generator #(.SLOW_CLOCK_BITS(13)) pwm1_gen(.clk(clock), .en(1'b1), .duty_cycle(pwmReg1[7:0]), .pwm_out(JA[2]));
+	pwm_generator #(.SLOW_CLOCK_BITS(13)) pwm2_gen(.clk(clock), .en(1'b1), .duty_cycle(pwmReg2[7:0]), .pwm_out(JA[3]));
+	pwm_generator #(.SLOW_CLOCK_BITS(13)) pwm3_gen(.clk(clock), .en(1'b1), .duty_cycle(pwmReg3[7:0]), .pwm_out(JA[4]));
+	pwm_generator #(.SLOW_CLOCK_BITS(13)) pwm4_gen(.clk(clock), .en(1'b1), .duty_cycle(pwmReg4[7:0]), .pwm_out(JA[5]));
 
 	// Debounce Inputs
 	genvar i;
 	generate
-		for(i = 1; i < 9; i = i + 1) begin: btn_debouncer_gen
-			btn_debouncer debouncer(.pb(SW[i - 1]), .clk(clock), .pb_out(digital_inputs[i-1]));
+		for(i = 0; i < 16; i = i + 1) begin: btn_debouncer_gen
+			btn_debouncer debouncer(.pb(SW[i]), .clk(clock), .pb_out(digital_inputs[i]));
 		end
 	endgenerate
 
@@ -76,7 +76,7 @@ module Wrapper (input CLK10MHZ, input CPU_RESETN, input [7:0] SW,
 
 	// ADD YOUR MEMORY FILE HERE
 	// localparam INSTR_FILE = "Test Files/Memory Files/rep_add";
-	localparam FILE = "test_ldi";
+	localparam FILE = "motor_drive";
 	localparam DIR = "C:/Users/johnj/dev/ece350/processor/Test Files/";
 	localparam MEM_DIR = "Memory Files/";
 	localparam OUT_DIR = "Output Files/";
@@ -125,6 +125,6 @@ module Wrapper (input CLK10MHZ, input CPU_RESETN, input [7:0] SW,
 		.dataOut(memDataOut), 
 		
 		// PWM Reg Output
-		.pwm0(pwmReg0), .pwm1(pwmReg1), .pwm2(pwmReg2), .pwm3(pwmReg3));
+		.pwm0(pwmReg0), .pwm1(pwmReg1), .pwm2(pwmReg2), .pwm3(pwmReg3), .pwm4(pwmReg4));
 
 endmodule

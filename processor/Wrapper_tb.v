@@ -33,14 +33,25 @@
  *
  **/
 
-module Wrapper_tb #(parameter FILE = "test_ldi");
+module Wrapper_tb #(parameter FILE = "motor_drive");
+
+	// PWM Regs
+	wire [31:0] pwmReg0, pwmReg1, pwmReg2, pwmReg3, pwmReg4;
+	wire [4:0] pwm_signals;
+
+	pwm_generator #(.SLOW_CLOCK_BITS(13)) pwm0_gen(.clk(clock), .en(1'b1), .duty_cycle(pwmReg0[7:0]), .pwm_out(pwm_signals[0]));
+	pwm_generator #(.SLOW_CLOCK_BITS(13)) pwm1_gen(.clk(clock), .en(1'b1), .duty_cycle(pwmReg1[7:0]), .pwm_out(pwm_signals[1]));
+	pwm_generator #(.SLOW_CLOCK_BITS(13)) pwm2_gen(.clk(clock), .en(1'b1), .duty_cycle(pwmReg2[7:0]), .pwm_out(pwm_signals[2]));
+	pwm_generator #(.SLOW_CLOCK_BITS(13)) pwm3_gen(.clk(clock), .en(1'b1), .duty_cycle(pwmReg3[7:0]), .pwm_out(pwm_signals[3]));
+	pwm_generator #(.SLOW_CLOCK_BITS(13)) pwm4_gen(.clk(clock), .en(1'b1), .duty_cycle(pwmReg4[7:0]), .pwm_out(pwm_signals[4]));
+
 
 	// FileData
 	localparam DIR = "C:/Users/johnj/dev/ece350/processor/Test Files/";
 	localparam MEM_DIR = "Memory Files/";
 	localparam OUT_DIR = "Output Files/";
 	localparam VERIF_DIR = "Verification Files/";
-	localparam DEFAULT_CYCLES = 255;
+	localparam DEFAULT_CYCLES = 1000;
 
 	// Inputs to the processor
 	reg clock = 0, reset = 0;
@@ -94,7 +105,7 @@ module Wrapper_tb #(parameter FILE = "test_ldi");
 		.wren(mwe), .address_dmem(memAddr), 
 		.data(memDataIn), .q_dmem(memDataOut),
 		
-		.input_pins(8'b00000001)); 
+		.input_pins(16'b0000000000010001)); 
 	
 	// Instruction Memory (ROM)
 	ROM #(.MEMFILE({DIR, MEM_DIR, FILE, ".mem"}))
@@ -114,7 +125,10 @@ module Wrapper_tb #(parameter FILE = "test_ldi");
 		.wEn(mwe), 
 		.addr(memAddr[11:0]), 
 		.dataIn(memDataIn), 
-		.dataOut(memDataOut));
+		.dataOut(memDataOut), 
+		
+		// PWM Reg Output
+		.pwm0(pwmReg0), .pwm1(pwmReg1), .pwm2(pwmReg2), .pwm3(pwmReg3), .pwm4(pwmReg4));
 
 	// Create the clock
 	always

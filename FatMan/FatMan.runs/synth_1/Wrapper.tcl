@@ -70,7 +70,6 @@ proc create_report { reportName command } {
   }
 }
 OPTRACE "synth_1" START { ROLLUP_AUTO }
-set_param tcl.collectionResultDisplayLimit 0
 set_param chipscope.maxJobs 5
 set_param xicom.use_bs_reader 1
 OPTRACE "Creating in-memory project" START { }
@@ -109,6 +108,7 @@ read_verilog -library xil_defaultlib {
   C:/Users/johnj/dev/ece350/processor/my_modules/alu/shifter/left_shift_4.v
   C:/Users/johnj/dev/ece350/processor/my_modules/alu/shifter/left_shift_8.v
   C:/Users/johnj/dev/ece350/processor/my_modules/multdiv/multdiv.v
+  C:/Users/johnj/dev/ece350/processor/my_modules/alu/mux/mux_16.v
   C:/Users/johnj/dev/ece350/processor/my_modules/alu/mux/mux_2.v
   C:/Users/johnj/dev/ece350/processor/my_modules/alu/mux/mux_32.v
   C:/Users/johnj/dev/ece350/processor/my_modules/alu/mux/mux_4.v

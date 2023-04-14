@@ -15,6 +15,7 @@ C:\Users\johnj\dev\ece350\processor\my_modules\alu\mux\mux_32.v
 C:\Users\johnj\dev\ece350\processor\my_modules\alu\mux\mux_32_tb.v
 C:\Users\johnj\dev\ece350\processor\my_modules\alu\mux\mux_4.v
 C:\Users\johnj\dev\ece350\processor\my_modules\alu\mux\mux_8.v
+C:\Users\johnj\dev\ece350\processor\my_modules\alu\mux\mux_16.v
 C:\Users\johnj\dev\ece350\processor\my_modules\alu\shifter\left_shift_1.v
 C:\Users\johnj\dev\ece350\processor\my_modules\alu\shifter\left_shift_16.v
 C:\Users\johnj\dev\ece350\processor\my_modules\alu\shifter\left_shift_2.v
@@ -35,6 +36,7 @@ C:\Users\johnj\dev\ece350\processor\my_modules\regfile\regfile.v
 C:\Users\johnj\dev\ece350\processor\my_modules\sr_latch.v
 C:\Users\johnj\dev\ece350\processor\my_modules\bit_regfile.v
 C:\Users\johnj\dev\ece350\processor\my_modules\btn_debouncer.v
+C:\Users\johnj\dev\ece350\processor\my_modules\pwm\pwm_generator.v
 C:\Users\johnj\dev\ece350\processor\Provided Behavioral Components\alu.v
 C:\Users\johnj\dev\ece350\processor\Provided Behavioral Components\dffe_ref.v
 C:\Users\johnj\dev\ece350\processor\Provided Behavioral Components\divider.v

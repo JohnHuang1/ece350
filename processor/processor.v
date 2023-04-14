@@ -70,7 +70,7 @@ module processor(
     output [7:0] output_pins;
 
     // Digital Input Lines
-    input[7:0] input_pins;
+    input[15:0] input_pins;
 
     // Falling edge clock
     wire n_clock = ~clock;
@@ -175,9 +175,11 @@ module processor(
     
     // Reading Digital Input
     wire selected_digital_input;
-    mux_8 #(.BIT_WIDTH(1)) digital_input_mux(.out(selected_digital_input), .select(alu_result[2:0]), 
+    mux_16 #(.BIT_WIDTH(1)) digital_input_mux(.out(selected_digital_input), .select(alu_result[3:0]), 
         .in0(input_pins[0]), .in1(input_pins[1]), .in2(input_pins[2]), .in3(input_pins[3]), 
-        .in4(input_pins[4]), .in5(input_pins[5]), .in6(input_pins[6]), .in7(input_pins[7]));
+        .in4(input_pins[4]), .in5(input_pins[5]), .in6(input_pins[6]), .in7(input_pins[7]),
+        .in8(input_pins[8]), .in9(input_pins[9]), .in10(input_pins[10]), .in11(input_pins[11]), 
+        .in12(input_pins[12]), .in13(input_pins[13]), .in14(input_pins[14]), .in15(input_pins[15]));
     wire [31:0] extended_digital_input = {{31{1'b0}}, selected_digital_input};
 
     // Branch logic
