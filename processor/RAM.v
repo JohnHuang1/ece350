@@ -4,23 +4,23 @@
 //  1201 = sw[15:8]
 // OUTPUT
 //  1204[15:0] = LED
-module RAM #( parameter DATA_WIDTH = 32, ADDRESS_WIDTH = 12, DEPTH = 4096) (
+module RAM #( parameter DATA_WIDTH = 32, ADDRESS_WIDTH = 12, DEPTH = 4096, PWM_SIZE = 4) (
     input wire                     clk,
     input wire                     wEn,
     input wire [ADDRESS_WIDTH-1:0] addr,
     input wire [DATA_WIDTH-1:0]    dataIn,
     output reg [DATA_WIDTH-1:0]    dataOut = 0, 
-    output wire [31:0] pwm0, pwm1, pwm2, pwm3, pwm4);
+    output wire [31:0] pwm0, pwm1, pwm2, pwm3);
     
     reg[DATA_WIDTH-1:0] MemoryArray[0:DEPTH-1];
-    reg[DATA_WIDTH-1:0] PWMRegArray[4:0];
+    reg[DATA_WIDTH-1:0] PWMRegArray[PWM_SIZE:0];
     
     integer i;
     initial begin
         for (i = 0; i < DEPTH; i = i + 1) begin
             MemoryArray[i] <= 0;
         end
-        for(i = 0; i < 5; i = i + 1) begin
+        for(i = 0; i < PWM_SIZE; i = i + 1) begin
             PWMRegArray[i] <= 0;
         end
         // if(MEMFILE > 0) begin
@@ -35,7 +35,6 @@ module RAM #( parameter DATA_WIDTH = 32, ADDRESS_WIDTH = 12, DEPTH = 4096) (
                 12'd1001: PWMRegArray[1] <= dataIn;
                 12'd1002: PWMRegArray[2] <= dataIn;
                 12'd1003: PWMRegArray[3] <= dataIn;
-                12'd1004: PWMRegArray[4] <= dataIn;
                 default: MemoryArray[addr] <= dataIn;
             endcase
         end else begin
@@ -44,7 +43,6 @@ module RAM #( parameter DATA_WIDTH = 32, ADDRESS_WIDTH = 12, DEPTH = 4096) (
                 12'd1001: dataOut <= PWMRegArray[1];
                 12'd1002: dataOut <= PWMRegArray[2];
                 12'd1003: dataOut <= PWMRegArray[3];
-                12'd1004: dataOut <= PWMRegArray[4];
                 default: dataOut <= MemoryArray[addr];
             endcase
         end
@@ -54,5 +52,4 @@ module RAM #( parameter DATA_WIDTH = 32, ADDRESS_WIDTH = 12, DEPTH = 4096) (
     assign pwm1 = PWMRegArray[1];
     assign pwm2 = PWMRegArray[2];
     assign pwm3 = PWMRegArray[3];
-    assign pwm4 = PWMRegArray[4];
 endmodule

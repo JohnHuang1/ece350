@@ -25,15 +25,17 @@
  iverilog -o proc -c CFILES.txt -s Wrapper_tb -P Wrapper_tb.FILE=\"sample\"
  **/
 
-module Wrapper (input CLK10MHZ, input CPU_RESETN, input [15:0] SW,
-		output [5:1] JA, output [8:1] JB, output[15:0] LED,
-		input [8:1] JC
+module Wrapper (input CLK10MHZ, input CPU_RESETN,
+		output [4:1] JA, output [8:1] JB, output[15:0] LED,
+		input [8:1] JC, input [8:1] JD
     );
 
 	wire reset = ~CPU_RESETN;
     wire clock = CLK10MHZ;
-	wire [31:0] pwmReg0, pwmReg1, pwmReg2, pwmReg3, pwmReg4;
+	wire [31:0] pwmReg0, pwmReg1, pwmReg2, pwmReg3;
 	
+	wire [15:0] raw_inputs;
+	assign raw_inputs = {JD[8:1], JC[8:1]};
 	wire [15:0] digital_inputs;
 
 	wire rwe, mwe;
@@ -59,16 +61,17 @@ module Wrapper (input CLK10MHZ, input CPU_RESETN, input [15:0] SW,
 
 	// PWM Out
 	pwm_generator #(.SLOW_CLOCK_BITS(13)) pwm0_gen(.clk(clock), .en(1'b1), .duty_cycle(pwmReg0[7:0]), .pwm_out(JA[1]));
-	pwm_generator #(.SLOW_CLOCK_BITS(13)) pwm1_gen(.clk(clock), .en(1'b1), .duty_cycle(pwmReg1[7:0]), .pwm_out(JA[2]));
+	// pwm_generator #(.SLOW_CLOCK_BITS(13)) pwm1_gen(.clk(clock), .en(1'b1), .duty_cycle(pwmReg1[7:0]), .pwm_out(JA[2]));
+	linear_actuator_controller lac(.clk(clock), .mode(pwmReg1), .actuator_pwm(JA[2]));
 	pwm_generator #(.SLOW_CLOCK_BITS(13)) pwm2_gen(.clk(clock), .en(1'b1), .duty_cycle(pwmReg2[7:0]), .pwm_out(JA[3]));
 	pwm_generator #(.SLOW_CLOCK_BITS(13)) pwm3_gen(.clk(clock), .en(1'b1), .duty_cycle(pwmReg3[7:0]), .pwm_out(JA[4]));
-	pwm_generator #(.SLOW_CLOCK_BITS(13)) pwm4_gen(.clk(clock), .en(1'b1), .duty_cycle(pwmReg4[7:0]), .pwm_out(JA[5]));
+	// pwm_generator #(.SLOW_CLOCK_BITS(13)) pwm4_gen(.clk(clock), .en(1'b1), .duty_cycle(pwmReg4[7:0]), .pwm_out(JA[5]));
 
 	// Debounce Inputs
 	genvar i;
 	generate
 		for(i = 0; i < 16; i = i + 1) begin: btn_debouncer_gen
-			btn_debouncer debouncer(.pb(SW[i]), .clk(clock), .pb_out(digital_inputs[i]));
+			btn_debouncer debouncer(.pb(raw_inputs[i]), .clk(clock), .pb_out(digital_inputs[i]));
 		end
 	endgenerate
 
@@ -125,6 +128,8 @@ module Wrapper (input CLK10MHZ, input CPU_RESETN, input [15:0] SW,
 		.dataOut(memDataOut), 
 		
 		// PWM Reg Output
-		.pwm0(pwmReg0), .pwm1(pwmReg1), .pwm2(pwmReg2), .pwm3(pwmReg3), .pwm4(pwmReg4));
+		.pwm0(pwmReg0), .pwm1(pwmReg1), .pwm2(pwmReg2), .pwm3(pwmReg3)
+		// , .pwm4(pwmReg4)
+		);
 
 endmodule

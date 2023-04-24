@@ -72,6 +72,7 @@ proc create_report { reportName command } {
 OPTRACE "synth_1" START { ROLLUP_AUTO }
 set_param chipscope.maxJobs 5
 set_param xicom.use_bs_reader 1
+set_msg_config -id {Common 17-41} -limit 10000000
 OPTRACE "Creating in-memory project" START { }
 create_project -in_memory -part xc7a100tcsg324-1
 
@@ -107,6 +108,7 @@ read_verilog -library xil_defaultlib {
   C:/Users/johnj/dev/ece350/processor/my_modules/alu/shifter/left_shift_32_barrel.v
   C:/Users/johnj/dev/ece350/processor/my_modules/alu/shifter/left_shift_4.v
   C:/Users/johnj/dev/ece350/processor/my_modules/alu/shifter/left_shift_8.v
+  C:/Users/johnj/dev/ece350/processor/my_modules/linear_actuator_controller.v
   C:/Users/johnj/dev/ece350/processor/my_modules/multdiv/multdiv.v
   C:/Users/johnj/dev/ece350/processor/my_modules/alu/mux/mux_16.v
   C:/Users/johnj/dev/ece350/processor/my_modules/alu/mux/mux_2.v

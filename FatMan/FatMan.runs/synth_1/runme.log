@@ -17,13 +17,13 @@ INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7a100
 INFO: [Device 21-403] Loading part xc7a100tcsg324-1
 INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 2 processes.
 INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
-INFO: [Synth 8-7075] Helper process launched with PID 17756
+INFO: [Synth 8-7075] Helper process launched with PID 22588
 WARNING: [Synth 8-6901] identifier 'p_data_rdy' is used before its declaration [C:/Users/johnj/dev/ece350/processor/processor.v:253]
 WARNING: [Synth 8-6901] identifier 'p_ir_final' is used before its declaration [C:/Users/johnj/dev/ece350/processor/processor.v:253]
 WARNING: [Synth 8-6901] identifier 'p_data_rdy' is used before its declaration [C:/Users/johnj/dev/ece350/processor/processor.v:254]
 WARNING: [Synth 8-6901] identifier 'p_data' is used before its declaration [C:/Users/johnj/dev/ece350/processor/processor.v:254]
 ---------------------------------------------------------------------------------
-Starting RTL Elaboration : Time (s): cpu = 00:00:01 ; elapsed = 00:00:03 . Memory (MB): peak = 1052.184 ; gain = 0.000
+Starting RTL Elaboration : Time (s): cpu = 00:00:01 ; elapsed = 00:00:03 . Memory (MB): peak = 1013.430 ; gain = 0.000
 ---------------------------------------------------------------------------------
 INFO: [Synth 8-6157] synthesizing module 'Wrapper' [C:/Users/johnj/dev/ece350/processor/Wrapper.v:28]
 	Parameter FILE bound to: motor_drive - type: string 
@@ -41,21 +41,23 @@ INFO: [Synth 8-6157] synthesizing module 'pwm_generator' [C:/Users/johnj/dev/ece
 	Parameter PWM_BIT_WIDTH bound to: 8 - type: integer 
 	Parameter SLOW_CLOCK_BITS bound to: 13 - type: integer 
 INFO: [Synth 8-6155] done synthesizing module 'pwm_generator' (4#1) [C:/Users/johnj/dev/ece350/processor/my_modules/pwm/pwm_generator.v:1]
+INFO: [Synth 8-6157] synthesizing module 'linear_actuator_controller' [C:/Users/johnj/dev/ece350/processor/my_modules/linear_actuator_controller.v:1]
+INFO: [Synth 8-6155] done synthesizing module 'linear_actuator_controller' (5#1) [C:/Users/johnj/dev/ece350/processor/my_modules/linear_actuator_controller.v:1]
 INFO: [Synth 8-6157] synthesizing module 'processor' [C:/Users/johnj/dev/ece350/processor/processor.v:20]
 INFO: [Synth 8-6157] synthesizing module 'reg32' [C:/Users/johnj/dev/ece350/processor/my_modules/regfile/reg32.v:2]
 INFO: [Synth 8-6157] synthesizing module 'dffe_ref' [C:/Users/johnj/dev/ece350/processor/Provided Behavioral Components/dffe_ref.v:1]
-INFO: [Synth 8-6155] done synthesizing module 'dffe_ref' (5#1) [C:/Users/johnj/dev/ece350/processor/Provided Behavioral Components/dffe_ref.v:1]
-INFO: [Synth 8-6155] done synthesizing module 'reg32' (6#1) [C:/Users/johnj/dev/ece350/processor/my_modules/regfile/reg32.v:2]
+INFO: [Synth 8-6155] done synthesizing module 'dffe_ref' (6#1) [C:/Users/johnj/dev/ece350/processor/Provided Behavioral Components/dffe_ref.v:1]
+INFO: [Synth 8-6155] done synthesizing module 'reg32' (7#1) [C:/Users/johnj/dev/ece350/processor/my_modules/regfile/reg32.v:2]
 INFO: [Synth 8-6157] synthesizing module 'cla32bit' [C:/Users/johnj/dev/ece350/processor/my_modules/alu/cla/cla32bit.v:1]
 INFO: [Synth 8-6157] synthesizing module 'cla8bit' [C:/Users/johnj/dev/ece350/processor/my_modules/alu/cla/cla8bit.v:1]
-INFO: [Synth 8-6155] done synthesizing module 'cla8bit' (7#1) [C:/Users/johnj/dev/ece350/processor/my_modules/alu/cla/cla8bit.v:1]
-INFO: [Synth 8-6155] done synthesizing module 'cla32bit' (8#1) [C:/Users/johnj/dev/ece350/processor/my_modules/alu/cla/cla32bit.v:1]
+INFO: [Synth 8-6155] done synthesizing module 'cla8bit' (8#1) [C:/Users/johnj/dev/ece350/processor/my_modules/alu/cla/cla8bit.v:1]
+INFO: [Synth 8-6155] done synthesizing module 'cla32bit' (9#1) [C:/Users/johnj/dev/ece350/processor/my_modules/alu/cla/cla32bit.v:1]
 WARNING: [Synth 8-7071] port 'Cout' of module 'cla32bit' is unconnected for instance 'pc_incrementer' [C:/Users/johnj/dev/ece350/processor/processor.v:87]
 WARNING: [Synth 8-7071] port 'and_32' of module 'cla32bit' is unconnected for instance 'pc_incrementer' [C:/Users/johnj/dev/ece350/processor/processor.v:87]
 WARNING: [Synth 8-7071] port 'or_32' of module 'cla32bit' is unconnected for instance 'pc_incrementer' [C:/Users/johnj/dev/ece350/processor/processor.v:87]
 WARNING: [Synth 8-7023] instance 'pc_incrementer' of module 'cla32bit' has 7 connections declared, but only 4 given [C:/Users/johnj/dev/ece350/processor/processor.v:87]
 INFO: [Synth 8-6157] synthesizing module 'decoder32' [C:/Users/johnj/dev/ece350/processor/my_modules/regfile/decoder32.v:1]
-INFO: [Synth 8-6155] done synthesizing module 'decoder32' (9#1) [C:/Users/johnj/dev/ece350/processor/my_modules/regfile/decoder32.v:1]
+INFO: [Synth 8-6155] done synthesizing module 'decoder32' (10#1) [C:/Users/johnj/dev/ece350/processor/my_modules/regfile/decoder32.v:1]
 INFO: [Synth 8-6157] synthesizing module 'alu' [C:/Users/johnj/dev/ece350/processor/my_modules/alu/alu.v:1]
 INFO: [Synth 8-6157] synthesizing module 'mux_32' [C:/Users/johnj/dev/ece350/processor/my_modules/alu/mux/mux_32.v:1]
 INFO: [Synth 8-6157] synthesizing module 'mux_8' [C:/Users/johnj/dev/ece350/processor/my_modules/alu/mux/mux_8.v:1]
@@ -64,31 +66,31 @@ INFO: [Synth 8-6157] synthesizing module 'mux_4' [C:/Users/johnj/dev/ece350/proc
 	Parameter BIT_WIDTH bound to: 32 - type: integer 
 INFO: [Synth 8-6157] synthesizing module 'mux_2' [C:/Users/johnj/dev/ece350/processor/my_modules/alu/mux/mux_2.v:1]
 	Parameter BIT_WIDTH bound to: 32 - type: integer 
-INFO: [Synth 8-6155] done synthesizing module 'mux_2' (10#1) [C:/Users/johnj/dev/ece350/processor/my_modules/alu/mux/mux_2.v:1]
-INFO: [Synth 8-6155] done synthesizing module 'mux_4' (11#1) [C:/Users/johnj/dev/ece350/processor/my_modules/alu/mux/mux_4.v:1]
-INFO: [Synth 8-6155] done synthesizing module 'mux_8' (12#1) [C:/Users/johnj/dev/ece350/processor/my_modules/alu/mux/mux_8.v:1]
+INFO: [Synth 8-6155] done synthesizing module 'mux_2' (11#1) [C:/Users/johnj/dev/ece350/processor/my_modules/alu/mux/mux_2.v:1]
+INFO: [Synth 8-6155] done synthesizing module 'mux_4' (12#1) [C:/Users/johnj/dev/ece350/processor/my_modules/alu/mux/mux_4.v:1]
+INFO: [Synth 8-6155] done synthesizing module 'mux_8' (13#1) [C:/Users/johnj/dev/ece350/processor/my_modules/alu/mux/mux_8.v:1]
 INFO: [Synth 8-6157] synthesizing module 'mux_4__parameterized0' [C:/Users/johnj/dev/ece350/processor/my_modules/alu/mux/mux_4.v:1]
 	Parameter BIT_WIDTH bound to: 32 - type: integer 
-INFO: [Synth 8-6155] done synthesizing module 'mux_4__parameterized0' (12#1) [C:/Users/johnj/dev/ece350/processor/my_modules/alu/mux/mux_4.v:1]
-INFO: [Synth 8-6155] done synthesizing module 'mux_32' (13#1) [C:/Users/johnj/dev/ece350/processor/my_modules/alu/mux/mux_32.v:1]
+INFO: [Synth 8-6155] done synthesizing module 'mux_4__parameterized0' (13#1) [C:/Users/johnj/dev/ece350/processor/my_modules/alu/mux/mux_4.v:1]
+INFO: [Synth 8-6155] done synthesizing module 'mux_32' (14#1) [C:/Users/johnj/dev/ece350/processor/my_modules/alu/mux/mux_32.v:1]
 INFO: [Synth 8-6157] synthesizing module 'not_32' [C:/Users/johnj/dev/ece350/processor/my_modules/alu/not_32.v:1]
-INFO: [Synth 8-6155] done synthesizing module 'not_32' (14#1) [C:/Users/johnj/dev/ece350/processor/my_modules/alu/not_32.v:1]
+INFO: [Synth 8-6155] done synthesizing module 'not_32' (15#1) [C:/Users/johnj/dev/ece350/processor/my_modules/alu/not_32.v:1]
 INFO: [Synth 8-6157] synthesizing module 'mux_2__parameterized0' [C:/Users/johnj/dev/ece350/processor/my_modules/alu/mux/mux_2.v:1]
 	Parameter BIT_WIDTH bound to: 32 - type: integer 
-INFO: [Synth 8-6155] done synthesizing module 'mux_2__parameterized0' (14#1) [C:/Users/johnj/dev/ece350/processor/my_modules/alu/mux/mux_2.v:1]
+INFO: [Synth 8-6155] done synthesizing module 'mux_2__parameterized0' (15#1) [C:/Users/johnj/dev/ece350/processor/my_modules/alu/mux/mux_2.v:1]
 INFO: [Synth 8-6157] synthesizing module 'left_shift_32_barrel' [C:/Users/johnj/dev/ece350/processor/my_modules/alu/shifter/left_shift_32_barrel.v:1]
 INFO: [Synth 8-6157] synthesizing module 'left_shift_16' [C:/Users/johnj/dev/ece350/processor/my_modules/alu/shifter/left_shift_16.v:1]
-INFO: [Synth 8-6155] done synthesizing module 'left_shift_16' (15#1) [C:/Users/johnj/dev/ece350/processor/my_modules/alu/shifter/left_shift_16.v:1]
+INFO: [Synth 8-6155] done synthesizing module 'left_shift_16' (16#1) [C:/Users/johnj/dev/ece350/processor/my_modules/alu/shifter/left_shift_16.v:1]
 INFO: [Synth 8-6157] synthesizing module 'left_shift_8' [C:/Users/johnj/dev/ece350/processor/my_modules/alu/shifter/left_shift_8.v:1]
-INFO: [Synth 8-6155] done synthesizing module 'left_shift_8' (16#1) [C:/Users/johnj/dev/ece350/processor/my_modules/alu/shifter/left_shift_8.v:1]
+INFO: [Synth 8-6155] done synthesizing module 'left_shift_8' (17#1) [C:/Users/johnj/dev/ece350/processor/my_modules/alu/shifter/left_shift_8.v:1]
 INFO: [Synth 8-6157] synthesizing module 'left_shift_4' [C:/Users/johnj/dev/ece350/processor/my_modules/alu/shifter/left_shift_4.v:1]
-INFO: [Synth 8-6155] done synthesizing module 'left_shift_4' (17#1) [C:/Users/johnj/dev/ece350/processor/my_modules/alu/shifter/left_shift_4.v:1]
+INFO: [Synth 8-6155] done synthesizing module 'left_shift_4' (18#1) [C:/Users/johnj/dev/ece350/processor/my_modules/alu/shifter/left_shift_4.v:1]
 INFO: [Synth 8-6157] synthesizing module 'left_shift_2' [C:/Users/johnj/dev/ece350/processor/my_modules/alu/shifter/left_shift_2.v:1]
-INFO: [Synth 8-6155] done synthesizing module 'left_shift_2' (18#1) [C:/Users/johnj/dev/ece350/processor/my_modules/alu/shifter/left_shift_2.v:1]
+INFO: [Synth 8-6155] done synthesizing module 'left_shift_2' (19#1) [C:/Users/johnj/dev/ece350/processor/my_modules/alu/shifter/left_shift_2.v:1]
 INFO: [Synth 8-6157] synthesizing module 'left_shift_1' [C:/Users/johnj/dev/ece350/processor/my_modules/alu/shifter/left_shift_1.v:1]
-INFO: [Synth 8-6155] done synthesizing module 'left_shift_1' (19#1) [C:/Users/johnj/dev/ece350/processor/my_modules/alu/shifter/left_shift_1.v:1]
-INFO: [Synth 8-6155] done synthesizing module 'left_shift_32_barrel' (20#1) [C:/Users/johnj/dev/ece350/processor/my_modules/alu/shifter/left_shift_32_barrel.v:1]
-INFO: [Synth 8-6155] done synthesizing module 'alu' (21#1) [C:/Users/johnj/dev/ece350/processor/my_modules/alu/alu.v:1]
+INFO: [Synth 8-6155] done synthesizing module 'left_shift_1' (20#1) [C:/Users/johnj/dev/ece350/processor/my_modules/alu/shifter/left_shift_1.v:1]
+INFO: [Synth 8-6155] done synthesizing module 'left_shift_32_barrel' (21#1) [C:/Users/johnj/dev/ece350/processor/my_modules/alu/shifter/left_shift_32_barrel.v:1]
+INFO: [Synth 8-6155] done synthesizing module 'alu' (22#1) [C:/Users/johnj/dev/ece350/processor/my_modules/alu/alu.v:1]
 INFO: [Synth 8-6157] synthesizing module 'mux_16' [C:/Users/johnj/dev/ece350/processor/my_modules/alu/mux/mux_16.v:1]
 	Parameter BIT_WIDTH bound to: 1 - type: integer 
 INFO: [Synth 8-6157] synthesizing module 'mux_8__parameterized0' [C:/Users/johnj/dev/ece350/processor/my_modules/alu/mux/mux_8.v:1]
@@ -97,22 +99,22 @@ INFO: [Synth 8-6157] synthesizing module 'mux_4__parameterized1' [C:/Users/johnj
 	Parameter BIT_WIDTH bound to: 1 - type: integer 
 INFO: [Synth 8-6157] synthesizing module 'mux_2__parameterized1' [C:/Users/johnj/dev/ece350/processor/my_modules/alu/mux/mux_2.v:1]
 	Parameter BIT_WIDTH bound to: 1 - type: integer 
-INFO: [Synth 8-6155] done synthesizing module 'mux_2__parameterized1' (21#1) [C:/Users/johnj/dev/ece350/processor/my_modules/alu/mux/mux_2.v:1]
-INFO: [Synth 8-6155] done synthesizing module 'mux_4__parameterized1' (21#1) [C:/Users/johnj/dev/ece350/processor/my_modules/alu/mux/mux_4.v:1]
-INFO: [Synth 8-6155] done synthesizing module 'mux_8__parameterized0' (21#1) [C:/Users/johnj/dev/ece350/processor/my_modules/alu/mux/mux_8.v:1]
-INFO: [Synth 8-6155] done synthesizing module 'mux_16' (22#1) [C:/Users/johnj/dev/ece350/processor/my_modules/alu/mux/mux_16.v:1]
+INFO: [Synth 8-6155] done synthesizing module 'mux_2__parameterized1' (22#1) [C:/Users/johnj/dev/ece350/processor/my_modules/alu/mux/mux_2.v:1]
+INFO: [Synth 8-6155] done synthesizing module 'mux_4__parameterized1' (22#1) [C:/Users/johnj/dev/ece350/processor/my_modules/alu/mux/mux_4.v:1]
+INFO: [Synth 8-6155] done synthesizing module 'mux_8__parameterized0' (22#1) [C:/Users/johnj/dev/ece350/processor/my_modules/alu/mux/mux_8.v:1]
+INFO: [Synth 8-6155] done synthesizing module 'mux_16' (23#1) [C:/Users/johnj/dev/ece350/processor/my_modules/alu/mux/mux_16.v:1]
 WARNING: [Synth 8-7071] port 'Cout' of module 'cla32bit' is unconnected for instance 'pc_adder' [C:/Users/johnj/dev/ece350/processor/processor.v:188]
 WARNING: [Synth 8-7071] port 'and_32' of module 'cla32bit' is unconnected for instance 'pc_adder' [C:/Users/johnj/dev/ece350/processor/processor.v:188]
 WARNING: [Synth 8-7071] port 'or_32' of module 'cla32bit' is unconnected for instance 'pc_adder' [C:/Users/johnj/dev/ece350/processor/processor.v:188]
 WARNING: [Synth 8-7023] instance 'pc_adder' of module 'cla32bit' has 7 connections declared, but only 4 given [C:/Users/johnj/dev/ece350/processor/processor.v:188]
 INFO: [Synth 8-6157] synthesizing module 'bit_regfile' [C:/Users/johnj/dev/ece350/processor/my_modules/bit_regfile.v:1]
 	Parameter SIZE bound to: 8 - type: integer 
-INFO: [Synth 8-6155] done synthesizing module 'bit_regfile' (23#1) [C:/Users/johnj/dev/ece350/processor/my_modules/bit_regfile.v:1]
+INFO: [Synth 8-6155] done synthesizing module 'bit_regfile' (24#1) [C:/Users/johnj/dev/ece350/processor/my_modules/bit_regfile.v:1]
 INFO: [Synth 8-6157] synthesizing module 'multdiv' [C:/Users/johnj/dev/ece350/processor/my_modules/multdiv/multdiv.v:1]
 WARNING: [Synth 8-7071] port 'clr' of module 'dffe_ref' is unconnected for instance 'dividend_sign_latch' [C:/Users/johnj/dev/ece350/processor/my_modules/multdiv/multdiv.v:42]
 WARNING: [Synth 8-7023] instance 'dividend_sign_latch' of module 'dffe_ref' has 5 connections declared, but only 4 given [C:/Users/johnj/dev/ece350/processor/my_modules/multdiv/multdiv.v:42]
 INFO: [Synth 8-6157] synthesizing module 'tff' [C:/Users/johnj/dev/ece350/processor/my_modules/multdiv/t_flip-flop/tff.v:1]
-INFO: [Synth 8-6155] done synthesizing module 'tff' (24#1) [C:/Users/johnj/dev/ece350/processor/my_modules/multdiv/t_flip-flop/tff.v:1]
+INFO: [Synth 8-6155] done synthesizing module 'tff' (25#1) [C:/Users/johnj/dev/ece350/processor/my_modules/multdiv/t_flip-flop/tff.v:1]
 WARNING: [Synth 8-7071] port 'qn' of module 'tff' is unconnected for instance 'toggle_running' [C:/Users/johnj/dev/ece350/processor/my_modules/multdiv/multdiv.v:45]
 WARNING: [Synth 8-7023] instance 'toggle_running' of module 'tff' has 6 connections declared, but only 5 given [C:/Users/johnj/dev/ece350/processor/my_modules/multdiv/multdiv.v:45]
 WARNING: [Synth 8-7071] port 'clear' of module 'reg32' is unconnected for instance 'M_reg' [C:/Users/johnj/dev/ece350/processor/my_modules/multdiv/multdiv.v:49]
@@ -122,11 +124,11 @@ WARNING: [Synth 8-7071] port 'Cout' of module 'cla32bit' is unconnected for inst
 WARNING: [Synth 8-7071] port 'and_32' of module 'cla32bit' is unconnected for instance 'adder' [C:/Users/johnj/dev/ece350/processor/my_modules/multdiv/negate_32.v:8]
 WARNING: [Synth 8-7071] port 'or_32' of module 'cla32bit' is unconnected for instance 'adder' [C:/Users/johnj/dev/ece350/processor/my_modules/multdiv/negate_32.v:8]
 WARNING: [Synth 8-7023] instance 'adder' of module 'cla32bit' has 7 connections declared, but only 4 given [C:/Users/johnj/dev/ece350/processor/my_modules/multdiv/negate_32.v:8]
-INFO: [Synth 8-6155] done synthesizing module 'negate_32' (25#1) [C:/Users/johnj/dev/ece350/processor/my_modules/multdiv/negate_32.v:1]
+INFO: [Synth 8-6155] done synthesizing module 'negate_32' (26#1) [C:/Users/johnj/dev/ece350/processor/my_modules/multdiv/negate_32.v:1]
 WARNING: [Synth 8-7071] port 'overflow' of module 'negate_32' is unconnected for instance 'negate_dividend' [C:/Users/johnj/dev/ece350/processor/my_modules/multdiv/multdiv.v:54]
 WARNING: [Synth 8-7023] instance 'negate_dividend' of module 'negate_32' has 4 connections declared, but only 3 given [C:/Users/johnj/dev/ece350/processor/my_modules/multdiv/multdiv.v:54]
 INFO: [Synth 8-6157] synthesizing module 'reg65' [C:/Users/johnj/dev/ece350/processor/my_modules/multdiv/reg65.v:1]
-INFO: [Synth 8-6155] done synthesizing module 'reg65' (26#1) [C:/Users/johnj/dev/ece350/processor/my_modules/multdiv/reg65.v:1]
+INFO: [Synth 8-6155] done synthesizing module 'reg65' (27#1) [C:/Users/johnj/dev/ece350/processor/my_modules/multdiv/reg65.v:1]
 WARNING: [Synth 8-7071] port 'clear' of module 'reg65' is unconnected for instance 'A_reg' [C:/Users/johnj/dev/ece350/processor/my_modules/multdiv/multdiv.v:64]
 WARNING: [Synth 8-7023] instance 'A_reg' of module 'reg65' has 5 connections declared, but only 4 given [C:/Users/johnj/dev/ece350/processor/my_modules/multdiv/multdiv.v:64]
 WARNING: [Synth 8-7071] port 'overflow' of module 'negate_32' is unconnected for instance 'result_negate' [C:/Users/johnj/dev/ece350/processor/my_modules/multdiv/multdiv.v:68]
@@ -147,77 +149,126 @@ WARNING: [Synth 8-7071] port 'qn' of module 'tff' is unconnected for instance 't
 WARNING: [Synth 8-7023] instance 'tff1' of module 'tff' has 6 connections declared, but only 5 given [C:/Users/johnj/dev/ece350/processor/my_modules/multdiv/counter/counter_mod32.v:10]
 WARNING: [Synth 8-7071] port 'qn' of module 'tff' is unconnected for instance 'tff1' [C:/Users/johnj/dev/ece350/processor/my_modules/multdiv/counter/counter_mod32.v:10]
 WARNING: [Synth 8-7023] instance 'tff1' of module 'tff' has 6 connections declared, but only 5 given [C:/Users/johnj/dev/ece350/processor/my_modules/multdiv/counter/counter_mod32.v:10]
-INFO: [Synth 8-6155] done synthesizing module 'counter_mod32' (27#1) [C:/Users/johnj/dev/ece350/processor/my_modules/multdiv/counter/counter_mod32.v:1]
-INFO: [Synth 8-6155] done synthesizing module 'multdiv' (28#1) [C:/Users/johnj/dev/ece350/processor/my_modules/multdiv/multdiv.v:1]
-INFO: [Synth 8-6155] done synthesizing module 'processor' (29#1) [C:/Users/johnj/dev/ece350/processor/processor.v:20]
+INFO: [Synth 8-6155] done synthesizing module 'counter_mod32' (28#1) [C:/Users/johnj/dev/ece350/processor/my_modules/multdiv/counter/counter_mod32.v:1]
+INFO: [Synth 8-6155] done synthesizing module 'multdiv' (29#1) [C:/Users/johnj/dev/ece350/processor/my_modules/multdiv/multdiv.v:1]
+INFO: [Synth 8-6155] done synthesizing module 'processor' (30#1) [C:/Users/johnj/dev/ece350/processor/processor.v:20]
 INFO: [Synth 8-6157] synthesizing module 'ROM' [C:/Users/johnj/dev/ece350/processor/ROM.v:2]
 	Parameter DATA_WIDTH bound to: 32 - type: integer 
 	Parameter ADDRESS_WIDTH bound to: 12 - type: integer 
 	Parameter DEPTH bound to: 4096 - type: integer 
 	Parameter MEMFILE bound to: 600'b010000110011101000101111010101010111001101100101011100100111001100101111011010100110111101101000011011100110101000101111011001000110010101110110001011110110010101100011011001010011001100110101001100000010111101110000011100100110111101100011011001010111001101110011011011110111001000101111010101000110010101110011011101000010000001000110011010010110110001100101011100110010111101001101011001010110110101101111011100100111100100100000010001100110100101101100011001010111001100101111011011010110111101110100011011110111001001011111011001000111001001101001011101100110010100101110011011010110010101101101 
 INFO: [Synth 8-3876] $readmem data file 'C:/Users/johnj/dev/ece350/processor/Test Files/Memory Files/motor_drive.mem' is read successfully [C:/Users/johnj/dev/ece350/processor/ROM.v:11]
-INFO: [Synth 8-6155] done synthesizing module 'ROM' (30#1) [C:/Users/johnj/dev/ece350/processor/ROM.v:2]
+INFO: [Synth 8-6155] done synthesizing module 'ROM' (31#1) [C:/Users/johnj/dev/ece350/processor/ROM.v:2]
 INFO: [Synth 8-6157] synthesizing module 'regfile' [C:/Users/johnj/dev/ece350/processor/my_modules/regfile/regfile.v:1]
-INFO: [Synth 8-6155] done synthesizing module 'regfile' (31#1) [C:/Users/johnj/dev/ece350/processor/my_modules/regfile/regfile.v:1]
+INFO: [Synth 8-6155] done synthesizing module 'regfile' (32#1) [C:/Users/johnj/dev/ece350/processor/my_modules/regfile/regfile.v:1]
 INFO: [Synth 8-6157] synthesizing module 'RAM' [C:/Users/johnj/dev/ece350/processor/RAM.v:7]
 	Parameter DATA_WIDTH bound to: 32 - type: integer 
 	Parameter ADDRESS_WIDTH bound to: 12 - type: integer 
 	Parameter DEPTH bound to: 4096 - type: integer 
-INFO: [Synth 8-6155] done synthesizing module 'RAM' (32#1) [C:/Users/johnj/dev/ece350/processor/RAM.v:7]
-INFO: [Synth 8-6155] done synthesizing module 'Wrapper' (33#1) [C:/Users/johnj/dev/ece350/processor/Wrapper.v:28]
+	Parameter PWM_SIZE bound to: 4 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'RAM' (33#1) [C:/Users/johnj/dev/ece350/processor/RAM.v:7]
+INFO: [Synth 8-6155] done synthesizing module 'Wrapper' (34#1) [C:/Users/johnj/dev/ece350/processor/Wrapper.v:28]
 ---------------------------------------------------------------------------------
-Finished RTL Elaboration : Time (s): cpu = 00:00:02 ; elapsed = 00:00:04 . Memory (MB): peak = 1052.184 ; gain = 0.000
+Finished RTL Elaboration : Time (s): cpu = 00:00:01 ; elapsed = 00:00:04 . Memory (MB): peak = 1013.430 ; gain = 0.000
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Handling Custom Attributes
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Handling Custom Attributes : Time (s): cpu = 00:00:02 ; elapsed = 00:00:04 . Memory (MB): peak = 1052.184 ; gain = 0.000
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:01 ; elapsed = 00:00:05 . Memory (MB): peak = 1013.430 ; gain = 0.000
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:02 ; elapsed = 00:00:04 . Memory (MB): peak = 1052.184 ; gain = 0.000
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:01 ; elapsed = 00:00:05 . Memory (MB): peak = 1013.430 ; gain = 0.000
 ---------------------------------------------------------------------------------
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.107 . Memory (MB): peak = 1052.184 ; gain = 0.000
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.117 . Memory (MB): peak = 1013.430 ; gain = 0.000
 INFO: [Project 1-570] Preparing netlist for logic optimization
 
 Processing XDC Constraints
 Initializing timing engine
 Parsing XDC File [C:/Users/johnj/dev/ece350/processor/master.xdc]
+WARNING: [Vivado 12-584] No ports matched 'SW[0]'. [C:/Users/johnj/dev/ece350/processor/master.xdc:14]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/johnj/dev/ece350/processor/master.xdc:14]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'SW[1]'. [C:/Users/johnj/dev/ece350/processor/master.xdc:15]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/johnj/dev/ece350/processor/master.xdc:15]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'SW[2]'. [C:/Users/johnj/dev/ece350/processor/master.xdc:16]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/johnj/dev/ece350/processor/master.xdc:16]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'SW[3]'. [C:/Users/johnj/dev/ece350/processor/master.xdc:17]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/johnj/dev/ece350/processor/master.xdc:17]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'SW[4]'. [C:/Users/johnj/dev/ece350/processor/master.xdc:18]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/johnj/dev/ece350/processor/master.xdc:18]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'SW[5]'. [C:/Users/johnj/dev/ece350/processor/master.xdc:19]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/johnj/dev/ece350/processor/master.xdc:19]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'SW[6]'. [C:/Users/johnj/dev/ece350/processor/master.xdc:20]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/johnj/dev/ece350/processor/master.xdc:20]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'SW[7]'. [C:/Users/johnj/dev/ece350/processor/master.xdc:21]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/johnj/dev/ece350/processor/master.xdc:21]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'SW[8]'. [C:/Users/johnj/dev/ece350/processor/master.xdc:22]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/johnj/dev/ece350/processor/master.xdc:22]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'SW[9]'. [C:/Users/johnj/dev/ece350/processor/master.xdc:23]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/johnj/dev/ece350/processor/master.xdc:23]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'SW[10]'. [C:/Users/johnj/dev/ece350/processor/master.xdc:24]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/johnj/dev/ece350/processor/master.xdc:24]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'SW[11]'. [C:/Users/johnj/dev/ece350/processor/master.xdc:25]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/johnj/dev/ece350/processor/master.xdc:25]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'SW[12]'. [C:/Users/johnj/dev/ece350/processor/master.xdc:26]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/johnj/dev/ece350/processor/master.xdc:26]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'SW[13]'. [C:/Users/johnj/dev/ece350/processor/master.xdc:27]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/johnj/dev/ece350/processor/master.xdc:27]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'SW[14]'. [C:/Users/johnj/dev/ece350/processor/master.xdc:28]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/johnj/dev/ece350/processor/master.xdc:28]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'SW[15]'. [C:/Users/johnj/dev/ece350/processor/master.xdc:29]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/johnj/dev/ece350/processor/master.xdc:29]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
 Finished Parsing XDC File [C:/Users/johnj/dev/ece350/processor/master.xdc]
 INFO: [Project 1-236] Implementation specific constraints were found while reading constraint file [C:/Users/johnj/dev/ece350/processor/master.xdc]. These constraints will be ignored for synthesis but will be used in implementation. Impacted constraints are listed in the file [.Xil/Wrapper_propImpl.xdc].
 Resolution: To avoid this warning, move constraints listed in [.Xil/Wrapper_propImpl.xdc] to another XDC file and exclude this new file from synthesis with the used_in_synthesis property (File Properties dialog in GUI) and re-run elaboration/synthesis.
 Completed Processing XDC Constraints
 
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.005 . Memory (MB): peak = 1052.184 ; gain = 0.000
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.005 . Memory (MB): peak = 1014.488 ; gain = 0.000
 INFO: [Project 1-111] Unisim Transformation Summary:
 No Unisim elements were transformed.
 
-Constraint Validation Runtime : Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.017 . Memory (MB): peak = 1052.184 ; gain = 0.000
+Constraint Validation Runtime : Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.018 . Memory (MB): peak = 1014.488 ; gain = 0.000
 ---------------------------------------------------------------------------------
-Finished Constraint Validation : Time (s): cpu = 00:00:04 ; elapsed = 00:00:09 . Memory (MB): peak = 1052.184 ; gain = 0.000
+Finished Constraint Validation : Time (s): cpu = 00:00:03 ; elapsed = 00:00:10 . Memory (MB): peak = 1014.488 ; gain = 1.059
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Loading Part and Timing Information
 ---------------------------------------------------------------------------------
 Loading part: xc7a100tcsg324-1
 ---------------------------------------------------------------------------------
-Finished Loading Part and Timing Information : Time (s): cpu = 00:00:04 ; elapsed = 00:00:09 . Memory (MB): peak = 1052.184 ; gain = 0.000
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:03 ; elapsed = 00:00:10 . Memory (MB): peak = 1014.488 ; gain = 1.059
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Applying 'set_property' XDC Constraints
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:04 ; elapsed = 00:00:09 . Memory (MB): peak = 1052.184 ; gain = 0.000
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:03 ; elapsed = 00:00:10 . Memory (MB): peak = 1014.488 ; gain = 1.059
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:04 ; elapsed = 00:00:10 . Memory (MB): peak = 1052.184 ; gain = 0.000
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:04 ; elapsed = 00:00:10 . Memory (MB): peak = 1014.488 ; gain = 1.059
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start RTL Component Statistics 
 ---------------------------------------------------------------------------------
 Detailed RTL Component Info : 
 +---Adders : 
-	   2 Input    8 Bit       Adders := 5     
+	   2 Input    8 Bit       Adders := 4     
 +---XORs : 
 	   3 Input      1 Bit         XORs := 192   
 	   2 Input      1 Bit         XORs := 5     
@@ -225,9 +276,9 @@ Detailed RTL Component Info :
 	                3 Bit    Wide XORs := 1     
 	                2 Bit    Wide XORs := 4     
 +---Registers : 
-	               32 Bit    Registers := 6     
+	               32 Bit    Registers := 5     
 	               28 Bit    Registers := 1     
-	                8 Bit    Registers := 5     
+	                8 Bit    Registers := 4     
 	                1 Bit    Registers := 1608  
 +---RAMs : 
 	             128K Bit	(4096 X 32 bit)          RAMs := 1     
@@ -236,11 +287,13 @@ Detailed RTL Component Info :
 +---Muxes : 
 	   2 Input   65 Bit        Muxes := 4     
 	   2 Input   32 Bit        Muxes := 65    
-	   2 Input    5 Bit        Muxes := 8     
+	   4 Input   32 Bit        Muxes := 1     
+	   2 Input    5 Bit        Muxes := 10    
+	   3 Input    5 Bit        Muxes := 1     
 	   2 Input    3 Bit        Muxes := 1     
 	   2 Input    2 Bit        Muxes := 4     
 	   2 Input    1 Bit        Muxes := 24    
-	   6 Input    1 Bit        Muxes := 6     
+	   4 Input    1 Bit        Muxes := 4     
 ---------------------------------------------------------------------------------
 Finished RTL Component Statistics 
 ---------------------------------------------------------------------------------
@@ -257,7 +310,7 @@ Finished Part Resource Summary
 Start Cross Boundary and Area Optimization
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:10 ; elapsed = 00:00:28 . Memory (MB): peak = 1052.184 ; gain = 0.000
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:12 ; elapsed = 00:00:28 . Memory (MB): peak = 1014.488 ; gain = 1.059
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start ROM, RAM, DSP and Shift Register Reporting
@@ -286,13 +339,13 @@ Finished ROM, RAM, DSP and Shift Register Reporting
 Start Applying XDC Timing Constraints
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:12 ; elapsed = 00:00:33 . Memory (MB): peak = 1052.184 ; gain = 0.000
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:15 ; elapsed = 00:00:33 . Memory (MB): peak = 1014.488 ; gain = 1.059
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Timing Optimization
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Timing Optimization : Time (s): cpu = 00:00:14 ; elapsed = 00:00:40 . Memory (MB): peak = 1148.012 ; gain = 95.828
+Finished Timing Optimization : Time (s): cpu = 00:00:18 ; elapsed = 00:00:40 . Memory (MB): peak = 1154.047 ; gain = 140.617
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start ROM, RAM, DSP and Shift Register Reporting
@@ -316,7 +369,7 @@ INFO: [Synth 8-7052] The timing for the instance InstMem/dataOut_reg_1 (implemen
 INFO: [Synth 8-7052] The timing for the instance InstMem/dataOut_reg_2 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
 INFO: [Synth 8-7052] The timing for the instance InstMem/dataOut_reg_3 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
 ---------------------------------------------------------------------------------
-Finished Technology Mapping : Time (s): cpu = 00:00:15 ; elapsed = 00:00:41 . Memory (MB): peak = 1188.477 ; gain = 136.293
+Finished Technology Mapping : Time (s): cpu = 00:00:19 ; elapsed = 00:00:41 . Memory (MB): peak = 1192.758 ; gain = 179.328
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start IO Insertion
@@ -334,37 +387,37 @@ Start Final Netlist Cleanup
 Finished Final Netlist Cleanup
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished IO Insertion : Time (s): cpu = 00:00:16 ; elapsed = 00:00:44 . Memory (MB): peak = 1194.867 ; gain = 142.684
+Finished IO Insertion : Time (s): cpu = 00:00:20 ; elapsed = 00:00:44 . Memory (MB): peak = 1198.934 ; gain = 185.504
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Instances
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Instances : Time (s): cpu = 00:00:16 ; elapsed = 00:00:44 . Memory (MB): peak = 1194.867 ; gain = 142.684
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:20 ; elapsed = 00:00:44 . Memory (MB): peak = 1198.934 ; gain = 185.504
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Rebuilding User Hierarchy
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:16 ; elapsed = 00:00:44 . Memory (MB): peak = 1194.867 ; gain = 142.684
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:20 ; elapsed = 00:00:44 . Memory (MB): peak = 1198.934 ; gain = 185.504
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Ports
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Ports : Time (s): cpu = 00:00:16 ; elapsed = 00:00:44 . Memory (MB): peak = 1194.867 ; gain = 142.684
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:20 ; elapsed = 00:00:44 . Memory (MB): peak = 1198.934 ; gain = 185.504
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Handling Custom Attributes
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Handling Custom Attributes : Time (s): cpu = 00:00:16 ; elapsed = 00:00:45 . Memory (MB): peak = 1194.898 ; gain = 142.715
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:20 ; elapsed = 00:00:44 . Memory (MB): peak = 1198.934 ; gain = 185.504
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Nets
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Nets : Time (s): cpu = 00:00:16 ; elapsed = 00:00:45 . Memory (MB): peak = 1194.898 ; gain = 142.715
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:20 ; elapsed = 00:00:44 . Memory (MB): peak = 1198.934 ; gain = 185.504
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Writing Synthesis Report
@@ -381,44 +434,43 @@ Report Cell Usage:
 |      |Cell      |Count |
 +------+----------+------+
 |1     |BUFG      |     1|
-|2     |CARRY4    |   137|
-|3     |LUT1      |    31|
-|4     |LUT2      |   315|
-|5     |LUT3      |   234|
-|6     |LUT4      |   413|
-|7     |LUT5      |   540|
-|8     |LUT6      |  2088|
+|2     |CARRY4    |   138|
+|3     |LUT1      |    30|
+|4     |LUT2      |   313|
+|5     |LUT3      |   237|
+|6     |LUT4      |   403|
+|7     |LUT5      |   568|
+|8     |LUT6      |  2064|
 |9     |MUXF7     |    66|
-|10    |MUXF8     |    32|
-|11    |RAM256X1S |   512|
-|12    |RAMB18E1  |     1|
-|13    |RAMB36E1  |     3|
-|16    |FDCE      |  1452|
-|17    |FDRE      |   880|
-|18    |IBUF      |    18|
-|19    |OBUF      |    29|
+|10    |RAM256X1S |   512|
+|11    |RAMB18E1  |     1|
+|12    |RAMB36E1  |     3|
+|15    |FDCE      |  1452|
+|16    |FDRE      |   855|
+|17    |IBUF      |    18|
+|18    |OBUF      |    28|
 +------+----------+------+
 ---------------------------------------------------------------------------------
-Finished Writing Synthesis Report : Time (s): cpu = 00:00:16 ; elapsed = 00:00:45 . Memory (MB): peak = 1194.898 ; gain = 142.715
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:20 ; elapsed = 00:00:44 . Memory (MB): peak = 1198.934 ; gain = 185.504
 ---------------------------------------------------------------------------------
 Synthesis finished with 0 errors, 0 critical warnings and 0 warnings.
-Synthesis Optimization Runtime : Time (s): cpu = 00:00:13 ; elapsed = 00:00:42 . Memory (MB): peak = 1194.898 ; gain = 142.715
-Synthesis Optimization Complete : Time (s): cpu = 00:00:16 ; elapsed = 00:00:45 . Memory (MB): peak = 1194.898 ; gain = 142.715
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:18 ; elapsed = 00:00:42 . Memory (MB): peak = 1198.934 ; gain = 184.445
+Synthesis Optimization Complete : Time (s): cpu = 00:00:20 ; elapsed = 00:00:44 . Memory (MB): peak = 1198.934 ; gain = 185.504
 INFO: [Project 1-571] Translating synthesized netlist
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.102 . Memory (MB): peak = 1194.898 ; gain = 0.000
-INFO: [Netlist 29-17] Analyzing 751 Unisim elements for replacement
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.100 . Memory (MB): peak = 1198.934 ; gain = 0.000
+INFO: [Netlist 29-17] Analyzing 720 Unisim elements for replacement
 INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
 INFO: [Project 1-570] Preparing netlist for logic optimization
 INFO: [Opt 31-138] Pushed 1 inverter(s) to 516 load pin(s).
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.005 . Memory (MB): peak = 1194.898 ; gain = 0.000
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.005 . Memory (MB): peak = 1198.934 ; gain = 0.000
 INFO: [Project 1-111] Unisim Transformation Summary:
   A total of 512 instances were transformed.
   RAM256X1S => RAM256X1S (inverted pins: WCLK) (MUXF7(x2), MUXF8, RAMS64E(x4)): 512 instances
 
 INFO: [Common 17-83] Releasing license: Synthesis
-96 Infos, 43 Warnings, 0 Critical Warnings and 0 Errors encountered.
+98 Infos, 59 Warnings, 16 Critical Warnings and 0 Errors encountered.
 synth_design completed successfully
-synth_design: Time (s): cpu = 00:00:19 ; elapsed = 00:00:51 . Memory (MB): peak = 1194.898 ; gain = 180.809
+synth_design: Time (s): cpu = 00:00:24 ; elapsed = 00:00:57 . Memory (MB): peak = 1198.934 ; gain = 185.504
 INFO: [Common 17-1381] The checkpoint 'C:/Users/johnj/dev/ece350/FatMan/FatMan.runs/synth_1/Wrapper.dcp' has been generated.
 INFO: [runtcl-4] Executing : report_utilization -file Wrapper_utilization_synth.rpt -pb Wrapper_utilization_synth.pb
-INFO: [Common 17-206] Exiting Vivado at Thu Apr 13 22:20:11 2023...
+INFO: [Common 17-206] Exiting Vivado at Mon Apr 24 16:56:40 2023...
