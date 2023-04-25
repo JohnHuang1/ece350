@@ -23,8 +23,6 @@ j end_write_data
 data_high:
 writeh $r0, $r0, 2 # data high
 end_write_data:
-nop
-nop
 writeh $r0, $r0, 0 # clock high
 sra $r1, $r1, 1 # shift mask (r1) right by 1
 bne $r1, $r0, latch_loop # loop until r1 == 0
@@ -33,6 +31,7 @@ jr $ra #return to latch _tx call
 nop
 main:
 jal latch_tx
+writel $r0, $r0, 1
 #addi $r1, $r0, 4 # set motor1_A (2) to drive
 addi $r1, $r1, 32 # set motor3_A (5) to drive
 addi $r1, $r1, 1 # set motor4_A (0) to drive
@@ -43,8 +42,9 @@ addi $r22, $r0, 2 # Register with value 2 for comparison
 addi $r8, $r0, 255 # Full power $r8 = 11111111
 addi $r7, $r0, 106 # ~ 5V (?) power delivered
 # No power $r0 = 00000000
-addi $r9, $r0, 6 # ~ 0.5 ms Pulse width $r9 = 00000111 Full CW
-addi $r10, $r0, 30 # ~ 2.5 ms Pulse width $r10 = 00100000 Full CCW
+addi $r6, $r0, 17 #  no move servo
+addi $r9, $r0, 15 # ~ 1.1 ms Pulse width $r9 = 00000111 Full CW # 6 ~= 0.5 ms Pulse Width
+addi $r10, $r0, 19 # ~ 1.8 ms Pulse width $r10 = 00100000 Full CCW
 nop
 # Input/Output checks
     # Motor addresses:
@@ -93,7 +93,7 @@ bne $r17, $r0, no_pan # branch if Left limit pressed
 sw $r10, 1003($r0) # Turn Left, Pan Servo full CCW
 j tilt
 no_pan:
-sw $r0, 1003($r0)
+sw $r6, 1003($r0)
 tilt:
 ldi $r13, $r0, 6 # $r13 Move Up
 ldi $r14, $r0, 4 # $r14 Move Down
@@ -113,7 +113,7 @@ bne $r19, $r0, no_tilt # branch if Down limit pressed
 sw $r10, 1002($r0) # Tilt Down, Tilt Servo full CCW
 j movement_end
 no_tilt:
-sw $r0, 1002($r0)
+sw $r6, 1002($r0)
 movement_end:
 j input
 nop

@@ -1,7 +1,7 @@
 Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
 ---------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2020.1 (win64) Build 2902540 Wed May 27 19:54:49 MDT 2020
-| Date         : Mon Apr 24 16:56:40 2023
+| Date         : Tue Apr 25 01:32:03 2023
 | Host         : LAPTOP-IHVVUO1B running 64-bit major release  (build 9200)
 | Command      : report_utilization -file Wrapper_utilization_synth.rpt -pb Wrapper_utilization_synth.pb
 | Design       : Wrapper
